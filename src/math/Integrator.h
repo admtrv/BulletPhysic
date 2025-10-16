@@ -7,7 +7,7 @@
 #include "Config.h"
 #include "dynamics/RigidBody.h"
 
-namespace luchphysic {
+namespace BulletPhysic {
 namespace math {
 
 class IIntegrator {
@@ -27,4 +27,4 @@ public:
 };
 
 } // namespace math
-} // namespace luchphysic
+} // namespace BulletPhysic

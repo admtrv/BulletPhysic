@@ -9,7 +9,7 @@
 
 #include <cmath>
 
-namespace luchphysic {
+namespace BulletPhysic {
 namespace dynamics {
 
 class RigidBody {
@@ -37,4 +37,4 @@ private:
 };
 
 } // namespace dynamics
-} // namespace luchphysic
+} // namespace BulletPhysic

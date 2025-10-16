@@ -4,7 +4,7 @@
 
 #include "RigidBody.h"
 
-namespace luchphysic {
+namespace BulletPhysic {
 namespace dynamics {
 
 void RigidBody::setMass(float mass)
@@ -52,4 +52,4 @@ void RigidBody::setState(const math::Vec3& pos, const math::Vec3& vel)
 }
 
 } // namespace dynamics
-} // namespace luchphysic
+} // namespace BulletPhysic

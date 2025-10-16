@@ -4,7 +4,7 @@
 
 #include "Integrator.h"
 
-namespace luchphysic {
+namespace BulletPhysic {
 namespace math {
 
 void EulerIntegrator::step(dynamics::RigidBody& rb, float dt)
@@ -74,4 +74,4 @@ void RK4Integrator::step(dynamics::RigidBody& rb, float dt)
 }
 
 } // namespace math
-} // namespace luchphysic
+} // namespace BulletPhysic
