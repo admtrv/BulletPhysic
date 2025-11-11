@@ -6,8 +6,10 @@
 
 namespace BulletPhysic {
 namespace math {
+namespace constants {
 
-constexpr float Pi = 3.14159265358979323846f;
+constexpr float PI = 3.14159265358979323846f;
 
+} // namespace constants
 } // namespace math
 } // namespace BulletPhysic
