@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "ForceGenerator.h"
+#include "Force.h"
 
 #include <vector>
 #include <memory>
@@ -25,8 +25,8 @@ public:
     ForceRegistry(ForceRegistry&&) = default;
     ForceRegistry& operator=(ForceRegistry&&) = default;
 
-    // add/remove force generator
-    void add(std::unique_ptr<IForceGenerator> generator);
+    // add/remove force
+    void add(std::unique_ptr<IForce> force);
     bool remove(size_t index);
     void clear();
 
@@ -34,14 +34,18 @@ public:
     void applyForces(RigidBody& rb, float dt); // apply all active forces
     void clearAccumulators(RigidBody& rb); // clear all accumulated forces
 
-    // get force generator
-    IForceGenerator* get(size_t index);
-    const IForceGenerator* get(size_t index) const;
+    // get force by index
+    IForce* get(size_t index);
+    const IForce* get(size_t index) const;
+
+    // get force by name
+    IForce* getByName(const std::string& forceName);
+    const IForce* getByName(const std::string& forceName) const;
 
     size_t count() const;
 
 private:
-    std::vector<std::unique_ptr<IForceGenerator>> m_generators;
+    std::vector<std::unique_ptr<IForce>> m_forces;
 };
 
 } // namespace forces

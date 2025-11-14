@@ -24,6 +24,9 @@ void PresetManager::configure(dynamics::forces::ForceRegistry& registry, Realism
         case RealismLevel::ATMOSPHERIC:
             configureAtmospheric(registry, projectileArea);
             break;
+        case RealismLevel::WIND:
+            configureWind(registry, math::Vec3{0.0f, 0.0f, 2.0f}, projectileArea);
+            break;
         case RealismLevel::CUSTOM:
             // user will add forces manually
             break;
@@ -70,6 +73,18 @@ void PresetManager::configureAtmospheric(dynamics::forces::ForceRegistry& regist
     registry.add(std::move(atmDragForce));
 }
 
+void PresetManager::configureWind(dynamics::forces::ForceRegistry& registry, const math::Vec3& windVelocity, float area, float dragCoefficient)
+{
+    // gravity
+    registry.add(std::make_unique<dynamics::forces::GravityForce>());
+
+    // wind drag with ISA model
+    auto windDragModel = std::make_unique<dynamics::forces::QuadraticDrag>(dragCoefficient);
+    auto windAtmModel = std::make_unique<dynamics::forces::ISAModel>();
+    auto windDragForce = std::make_unique<dynamics::forces::WindDragForce>(windVelocity, std::move(windDragModel), area, constants::SEA_LEVEL_DENSITY, std::move(windAtmModel));
+    registry.add(std::move(windDragForce));
+}
+
 std::unique_ptr<dynamics::forces::GravityForce> PresetManager::createGravity(const math::Vec3& gravity)
 {
     return std::make_unique<dynamics::forces::GravityForce>(gravity);
@@ -102,6 +117,19 @@ std::unique_ptr<dynamics::forces::AtmosphericDragForce> PresetManager::createAtm
     auto atmDrag = std::make_unique<dynamics::forces::AtmosphericDragForce>(std::move(dragModel),std::move(atmModel), area);
 
     return atmDrag;
+}
+
+std::unique_ptr<dynamics::forces::WindDragForce> PresetManager::createWind(const math::Vec3& windVelocity)
+{
+    auto dragModel = std::make_unique<dynamics::forces::QuadraticDrag>();
+    auto atmModel = std::make_unique<dynamics::forces::ISAModel>();
+    return std::make_unique<dynamics::forces::WindDragForce>(
+        windVelocity,
+        std::move(dragModel),
+        constants::DEFAULT_SPHERE_AREA,
+        constants::SEA_LEVEL_DENSITY,
+        std::move(atmModel)
+    );
 }
 
 } // namespace preset

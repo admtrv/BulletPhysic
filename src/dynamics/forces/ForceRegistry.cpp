@@ -8,19 +8,19 @@ namespace BulletPhysic {
 namespace dynamics {
 namespace forces {
 
-void ForceRegistry::add(std::unique_ptr<IForceGenerator> generator)
+void ForceRegistry::add(std::unique_ptr<IForce> force)
 {
-    if (generator)
+    if (force)
     {
-        m_generators.push_back(std::move(generator));
+        m_forces.push_back(std::move(force));
     }
 }
 
 bool ForceRegistry::remove(size_t index)
 {
-    if (index < m_generators.size())
+    if (index < m_forces.size())
     {
-        m_generators.erase(m_generators.begin() + index);
+        m_forces.erase(m_forces.begin() + index);
         return true;
     }
 
@@ -29,16 +29,16 @@ bool ForceRegistry::remove(size_t index)
 
 void ForceRegistry::clear()
 {
-    m_generators.clear();
+    m_forces.clear();
 }
 
 void ForceRegistry::applyForces(RigidBody& rb, float dt)
 {
-    for (auto& generator : m_generators)
+    for (auto& force : m_forces)
     {
-        if (generator && generator->isActive())
+        if (force && force->isActive())
         {
-            generator->apply(rb, dt);
+            force->apply(rb, dt);
         }
     }
 }
@@ -48,27 +48,51 @@ void ForceRegistry::clearAccumulators(RigidBody& rb)
     rb.clearForces();
 }
 
-IForceGenerator* ForceRegistry::get(size_t index)
+IForce* ForceRegistry::get(size_t index)
 {
-    if (index < m_generators.size())
+    if (index < m_forces.size())
     {
-        return m_generators[index].get();
+        return m_forces[index].get();
     }
     return nullptr;
 }
 
-const IForceGenerator* ForceRegistry::get(size_t index) const
+const IForce* ForceRegistry::get(size_t index) const
 {
-    if (index < m_generators.size())
+    if (index < m_forces.size())
     {
-        return m_generators[index].get();
+        return m_forces[index].get();
+    }
+    return nullptr;
+}
+
+IForce* ForceRegistry::getByName(const std::string& forceName)
+{
+    for (auto& force : m_forces)
+    {
+        if (force && force->getName() == forceName)
+        {
+            return force.get();
+        }
+    }
+    return nullptr;
+}
+
+const IForce* ForceRegistry::getByName(const std::string& forceName) const
+{
+    for (const auto& force : m_forces)
+    {
+        if (force && force->getName() == forceName)
+        {
+            return force.get();
+        }
     }
     return nullptr;
 }
 
 size_t ForceRegistry::count() const
 {
-    return m_generators.size();
+    return m_forces.size();
 }
 
 } // namespace forces

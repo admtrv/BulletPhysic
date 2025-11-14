@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "ForceGenerator.h"
+#include "Force.h"
 #include "Constants.h"
 #include "Config.h"
 
@@ -65,8 +65,8 @@ private:
 
 };
 
-// main drag force generator
-class DragForce : public IForceGenerator {
+// main drag force
+class DragForce : public IForce {
 public:
     DragForce(std::unique_ptr<IDragModel> model, float area = constants::DEFAULT_SPHERE_AREA, float density = constants::SEA_LEVEL_DENSITY)
         : m_model(std::move(model))
@@ -91,7 +91,10 @@ public:
     float getCrossSectionArea() const { return m_area; }
     float getAirDensity() const { return m_density; }
 
+    const std::string& getName() const override { return m_name; }
+
 private:
+    std::string m_name = "Air Drag";
     std::unique_ptr<IDragModel> m_model;
     float m_area;
     float m_density;

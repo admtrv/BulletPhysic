@@ -1,10 +1,10 @@
 /*
- * AtmosphereModel.h
+ * AtmosphericDragForce.h
  */
 
 #pragma once
 
-#include "ForceGenerator.h"
+#include "Force.h"
 #include "DragForce.h"
 #include "Constants.h"
 #include "Config.h"
@@ -16,7 +16,7 @@ namespace BulletPhysic {
 namespace dynamics {
 namespace forces {
 
-// Interface for atmosphere models
+// interface for atmosphere models
 class IAtmosphereModel {
 public:
     virtual ~IAtmosphereModel() = default;
@@ -126,7 +126,7 @@ private:
 };
 
 // drag force with atmosphere model
-class AtmosphericDragForce : public IForceGenerator {
+class AtmosphericDragForce : public IForce {
 public:
     AtmosphericDragForce(
         std::unique_ptr<IDragModel> dragModel = std::make_unique<QuadraticDrag>(),
@@ -168,8 +168,10 @@ public:
         return m_atmosphere ? m_atmosphere->getDensity(altitude) : constants::SEA_LEVEL_DENSITY;
     }
 
-private:
+    const std::string& getName() const override { return m_name; }
 
+private:
+    std::string m_name = "Atmospheric Drag";
     std::unique_ptr<IDragModel> m_dragModel;
     std::unique_ptr<IAtmosphereModel> m_atmosphere;
     float m_area;
