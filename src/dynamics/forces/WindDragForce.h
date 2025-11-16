@@ -22,14 +22,13 @@ public:
         float area = constants::DEFAULT_SPHERE_AREA,
         float density = constants::SEA_LEVEL_DENSITY,
         std::unique_ptr<IAtmosphereModel> atmosphere = nullptr,
-        float ground = config::ground
-    )
-        : m_windVelocity(windVelocity)
-        , m_dragModel(std::move(dragModel))
-        , m_area(area)
-        , m_density(density)
-        , m_atmosphere(std::move(atmosphere))
-        , m_groundY(ground)
+        float groundY = 0.0f)
+            : m_windVelocity(windVelocity)
+            , m_dragModel(std::move(dragModel))
+            , m_area(area)
+            , m_density(density)
+            , m_atmosphere(std::move(atmosphere))
+            , m_groundY(groundY)
     {
         if (!m_dragModel)
         {

@@ -5,7 +5,7 @@
 #pragma once
 
 #include "Force.h"
-#include "Config.h"
+#include "Constants.h"
 
 namespace BulletPhysic {
 namespace dynamics {
@@ -13,7 +13,7 @@ namespace forces {
 
 class GravityForce : public IForce {
 public:
-    explicit GravityForce(const math::Vec3& gravity = config::gravityVec) : m_gravity(gravity) {}
+    explicit GravityForce(const math::Vec3& gravity = constants::GRAVITY) : m_gravity(gravity) {}
 
     // gravity: F = m * g
     void apply(RigidBody& rb, float /*dt*/) override

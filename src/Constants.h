@@ -4,8 +4,13 @@
 
 #pragma once
 
+#include "math/Vec3.h"
+
 namespace BulletPhysic {
 namespace constants {
+
+// physical constants
+inline math::Vec3 GRAVITY{0.0f, -9.81f, 0.0f};
 
 // atmospheric constants
 inline constexpr float SEA_LEVEL_TEMPERATURE = 288.15f;   // K

@@ -3,6 +3,7 @@
  */
 
 #include "Vec3.h"
+#include <cmath>
 
 namespace BulletPhysic {
 namespace math {
@@ -52,6 +53,26 @@ Vec3& Vec3::operator*=(float scalar)
 Vec3 operator*(float scalar, const Vec3& vec)
 {
     return vec * scalar;
+}
+
+float Vec3::length() const
+{
+    return std::sqrt(x * x + y * y + z * z);
+}
+
+Vec3 Vec3::normalized() const
+{
+    float len = length();
+    if (len > 0.0001f)
+    {
+        return *this / len;
+    }
+    return {0.0f, 0.0f, 0.0f};
+}
+
+float Vec3::dot(const Vec3& rhs) const
+{
+    return x * rhs.x + y * rhs.y + z * rhs.z;
 }
 
 } // namespace math

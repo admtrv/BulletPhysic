@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "Config.h"
 #include "dynamics/RigidBody.h"
 #include "dynamics/forces/ForceRegistry.h"
 

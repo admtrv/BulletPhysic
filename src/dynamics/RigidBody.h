@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include "../Config.h"
-
 #include "math/Vec3.h"
 #include "math/Angles.h"
 
@@ -31,13 +29,15 @@ public:
 
     void setState(const math::Vec3& pos, const math::Vec3& vel);
 
-    bool isGrounded(float groundLevel = config::ground) const { return m_position.y <= groundLevel; }
+    void setGrounded(bool grounded) { m_isGrounded = grounded; }
+    bool isGrounded() const { return m_isGrounded; }
 
 private:
     float m_mass = 1.0f;
     math::Vec3 m_position{};
     math::Vec3 m_velocity{};
     math::Vec3 m_forces{};
+    bool m_isGrounded = false;
 };
 
 } // namespace dynamics

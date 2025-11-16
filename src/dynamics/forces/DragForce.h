@@ -6,7 +6,6 @@
 
 #include "Force.h"
 #include "Constants.h"
-#include "Config.h"
 
 #include <cmath>
 #include <memory>

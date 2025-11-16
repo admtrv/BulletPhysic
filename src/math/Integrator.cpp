@@ -27,17 +27,7 @@ void EulerIntegrator::step(dynamics::RigidBody& rb, dynamics::forces::ForceRegis
 
     // integrate
     Vec3 v = rb.velocity() + a * dt;
-    Vec3 x = rb.position() + v * dt;
-
-    // ground collision check
-    if (x.y < config::ground)
-    {
-        x.y = config::ground;
-        v = {0.0f, 0.0f, 0.0f};
-        rb.setState(x, v);
-        rb.clearForces();
-        return;
-    }
+    Vec3 x = rb.position() + rb.velocity() * dt;
 
     rb.setState(x, v);
     rb.clearForces();
@@ -94,16 +84,6 @@ void RK4Integrator::step(dynamics::RigidBody& rb, dynamics::forces::ForceRegistr
     // combine steps
     Vec3 v = v0 + (k1_v + k2_v * 2.0f + k3_v * 2.0f + k4_v) * (1.0f / 6.0f);
     Vec3 x = x0 + (k1_x + k2_x * 2.0f + k3_x * 2.0f + k4_x) * (1.0f / 6.0f);
-
-    // ground collision check
-    if (x.y < config::ground)
-    {
-        x.y = config::ground;
-        v = {0.0f, 0.0f, 0.0f};
-        rb.setState(x, v);
-        rb.clearForces();
-        return;
-    }
 
     rb.setState(x, v);
     rb.clearForces();

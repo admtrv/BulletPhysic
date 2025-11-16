@@ -7,7 +7,6 @@
 #include "Force.h"
 #include "DragForce.h"
 #include "Constants.h"
-#include "Config.h"
 
 #include <cmath>
 #include <memory>
@@ -65,7 +64,7 @@ public:
 
 private:
     // barometric formula exponent: g / (R * L)
-    static constexpr float BAROMETRIC_EXPONENT = config::freeFall / (constants::GAS_CONSTANT_DRY_AIR * constants::LAPSE_RATE);
+    static inline const float BAROMETRIC_EXPONENT = constants::GRAVITY.length() / (constants::GAS_CONSTANT_DRY_AIR * constants::LAPSE_RATE);
 
     // ISA model for troposphere (up to 11km)
     static constexpr float TROPOSPHERE_MAX_ALTITUDE = 11000.0f; // m
@@ -132,11 +131,11 @@ public:
         std::unique_ptr<IDragModel> dragModel = std::make_unique<QuadraticDrag>(),
         std::unique_ptr<IAtmosphereModel> atmosphere = std::make_unique<ISAModel>(),
         float area = constants::DEFAULT_SPHERE_AREA,
-        float ground = config::ground)
-        : m_dragModel(std::move(dragModel))
-        , m_atmosphere(std::move(atmosphere))
-        , m_area(area)
-        , m_groundY(ground)
+        float groundY = 0.0f)
+            : m_dragModel(std::move(dragModel))
+            , m_atmosphere(std::move(atmosphere))
+            , m_area(area)
+            , m_groundY(groundY)
     {}
 
     // drag force: F_drag = f(v, A, rho)

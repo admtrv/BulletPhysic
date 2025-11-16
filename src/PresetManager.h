@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "Config.h"
 #include "Constants.h"
 #include "dynamics/forces/ForceRegistry.h"
 #include "dynamics/forces/GravityForce.h"
@@ -41,7 +40,7 @@ public:
     static void configureWind(dynamics::forces::ForceRegistry& registry, const math::Vec3& windForce, float area = constants::DEFAULT_SPHERE_AREA, float dragCoefficient = constants::DEFAULT_SPHERE_CD);
 
     // factory methods for creating forces
-    static std::unique_ptr<dynamics::forces::GravityForce> createGravity(const math::Vec3& gravity = config::gravityVec);
+    static std::unique_ptr<dynamics::forces::GravityForce> createGravity(const math::Vec3& gravity = constants::GRAVITY);
     static std::unique_ptr<dynamics::forces::DragForce> createLinearDrag(float coefficient = constants::DEFAULT_SPHERE_LINEAR_B);
     static std::unique_ptr<dynamics::forces::DragForce> createQuadraticDrag(float dragCoefficient = constants::DEFAULT_SPHERE_CD, float area = constants::DEFAULT_SPHERE_AREA, float density = constants::SEA_LEVEL_DENSITY);
     static std::unique_ptr<dynamics::forces::AtmosphericDragForce> createAtmosphericDrag(float dragCoefficient = constants::DEFAULT_SPHERE_CD, float area = constants::DEFAULT_SPHERE_AREA, bool useISA = true);
