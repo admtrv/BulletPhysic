@@ -5,21 +5,21 @@
 #pragma once
 
 #include "dynamics/RigidBody.h"
+#include "dynamics/PhysicsContext.h"
 #include "math/Vec3.h"
 
 #include <string>
 
 namespace BulletPhysic {
 namespace dynamics {
-namespace forces {
 
+// base interface for forces
 class IForce {
 public:
     virtual ~IForce() = default;
 
-    // apply force to rigid body
-    // dt passed for forces that need time-based calculations
-    virtual void apply(RigidBody& rb, float dt) = 0;
+    // apply force to rigid body using context
+    virtual void apply(RigidBody& rb, const PhysicsContext& context, float dt) = 0;
 
     // check if this force should be active
     virtual bool isActive() const { return true; }
@@ -28,6 +28,5 @@ public:
     virtual const std::string& getName() const = 0;
 };
 
-} // namespace forces
 } // namespace dynamics
 } // namespace BulletPhysic

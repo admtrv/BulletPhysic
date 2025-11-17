@@ -7,15 +7,15 @@
 namespace BulletPhysic {
 namespace math {
 
-void EulerIntegrator::step(dynamics::RigidBody& rb, dynamics::forces::ForceRegistry* forceRegistry, float dt)
+void EulerIntegrator::step(dynamics::RigidBody& rb, dynamics::PhysicsWorld* world, float dt)
 {
     // clear previous forces
     rb.clearForces();
 
     // apply all registered forces
-    if (forceRegistry)
+    if (world)
     {
-        forceRegistry->applyForces(rb, dt);
+        world->applyForces(rb, dt);
     }
 
     // calculate acceleration
@@ -33,7 +33,7 @@ void EulerIntegrator::step(dynamics::RigidBody& rb, dynamics::forces::ForceRegis
     rb.clearForces();
 }
 
-void RK4Integrator::step(dynamics::RigidBody& rb, dynamics::forces::ForceRegistry* forceRegistry, float dt)
+void RK4Integrator::step(dynamics::RigidBody& rb, dynamics::PhysicsWorld* world, float dt)
 {
     // clear previous forces
     rb.clearForces();
@@ -49,9 +49,9 @@ void RK4Integrator::step(dynamics::RigidBody& rb, dynamics::forces::ForceRegistr
         tempRb.setState(pos, vel);
         tempRb.clearForces();
 
-        if (forceRegistry)
+        if (world)
         {
-            forceRegistry->applyForces(tempRb, dt);
+            world->applyForces(tempRb, dt);
         }
 
         Vec3 a = {0, 0, 0};

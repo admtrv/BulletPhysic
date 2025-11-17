@@ -5,47 +5,94 @@
 #pragma once
 
 #include "Constants.h"
-#include "dynamics/forces/ForceRegistry.h"
-#include "dynamics/forces/GravityForce.h"
-#include "dynamics/forces/DragForce.h"
-#include "dynamics/forces/AtmosphericDragForce.h"
-#include "dynamics/forces/WindDragForce.h"
-
-#include <memory>
+#include "dynamics/PhysicsWorld.h"
+#include "dynamics/forces/Gravity.h"
+#include "dynamics/forces/Drag.h"
+#include "dynamics/environment/Atmosphere.h"
+#include "dynamics/environment/Wind.h"
 
 namespace BulletPhysic {
 namespace preset {
 
-// predefined realism levels (in order of increasing realism)
-enum class RealismLevel {
-    BASIC,          // only gravity
-    SIMPLE_DRAG,    // gravity + linear drag
-    REALISTIC_DRAG, // gravity + quadratic drag
-    ATMOSPHERIC,    // gravity + atmospheric drag
-    WIND,           // gravity + atmospheric drag + wind drag
-    CUSTOM          // user-defined combination
+// realism levels: by physical effects
+enum class Preset {
+    GRAVITY_ONLY,       // parabolic trajectory
+    WITH_DRAG,          // + air drag
+    WITH_ATMOSPHERE,    // + variable density with altitude
+    WITH_WIND,          // + wind
+    CUSTOM
 };
 
-// manager for configuring physics presets
 class PresetManager {
 public:
-    // configure forces based on realism level
-    static void configure(dynamics::forces::ForceRegistry& registry, RealismLevel level, float crossSectionArea = constants::DEFAULT_SPHERE_AREA);
+    // configure physics world with specified realism level
+    static void configure(dynamics::PhysicsWorld& world,
+        Preset level,
+        const math::Vec3& wind = math::Vec3{0.0f, 0.0f, 0.0f},
+        float area = constants::DEFAULT_SPHERE_AREA,
+        float cd = constants::DEFAULT_SPHERE_CD)
+    {
+        switch (level)
+        {
+        case Preset::GRAVITY_ONLY:
+            configureGravityOnly(world);
+            break;
+        case Preset::WITH_DRAG:
+            configureWithDrag(world, area, cd);
+            break;
+        case Preset::WITH_ATMOSPHERE:
+            configureWithAtmosphere(world, area, cd);
+            break;
+        case Preset::WITH_WIND:
+            configureWithWind(world, wind, area, cd);
+            break;
+        case Preset::CUSTOM:
+            // user configures manually - just clear
+            world.clear();
+            break;
+        }
+    }
 
-    // individual configuration methods
-    static void configureBasic(dynamics::forces::ForceRegistry& registry);
-    static void configureSimpleDrag(dynamics::forces::ForceRegistry& registry, float coefficient = constants::DEFAULT_SPHERE_LINEAR_B);
-    static void configureRealisticDrag(dynamics::forces::ForceRegistry& registry, float area = constants::DEFAULT_SPHERE_AREA, float dragCoefficient = constants::DEFAULT_SPHERE_CD);
-    static void configureAtmospheric(dynamics::forces::ForceRegistry& registry, float area = constants::DEFAULT_SPHERE_AREA, float dragCoefficient = constants::DEFAULT_SPHERE_CD);
-    static void configureWind(dynamics::forces::ForceRegistry& registry, const math::Vec3& windForce, float area = constants::DEFAULT_SPHERE_AREA, float dragCoefficient = constants::DEFAULT_SPHERE_CD);
+    // parabolic trajectory
+    static void configureGravityOnly(dynamics::PhysicsWorld& world)
+    {
+        world.clear();
+        world.addForce(std::make_unique<dynamics::forces::Gravity>());
+    }
 
-    // factory methods for creating forces
-    static std::unique_ptr<dynamics::forces::GravityForce> createGravity(const math::Vec3& gravity = constants::GRAVITY);
-    static std::unique_ptr<dynamics::forces::DragForce> createLinearDrag(float coefficient = constants::DEFAULT_SPHERE_LINEAR_B);
-    static std::unique_ptr<dynamics::forces::DragForce> createQuadraticDrag(float dragCoefficient = constants::DEFAULT_SPHERE_CD, float area = constants::DEFAULT_SPHERE_AREA, float density = constants::SEA_LEVEL_DENSITY);
-    static std::unique_ptr<dynamics::forces::AtmosphericDragForce> createAtmosphericDrag(float dragCoefficient = constants::DEFAULT_SPHERE_CD, float area = constants::DEFAULT_SPHERE_AREA, bool useISA = true);
-    static std::unique_ptr<dynamics::forces::WindDragForce> createWind(const math::Vec3& windForce);
+    // gravity + drag
+    static void configureWithDrag(dynamics::PhysicsWorld& world,
+        float area = constants::DEFAULT_SPHERE_AREA,
+        float cd = constants::DEFAULT_SPHERE_CD)
+    {
+        world.clear();
+        world.addForce(std::make_unique<dynamics::forces::Gravity>());
+        world.addForce(std::make_unique<dynamics::forces::Drag>(cd, area));
+    }
 
+    // gravity + drag + atmosphere
+    static void configureWithAtmosphere(dynamics::PhysicsWorld& world,
+        float area = constants::DEFAULT_SPHERE_AREA,
+        float cd = constants::DEFAULT_SPHERE_CD)
+    {
+        world.clear();
+        world.addForce(std::make_unique<dynamics::forces::Gravity>());
+        world.addEnvironment(std::make_unique<dynamics::environment::Atmosphere>());
+        world.addForce(std::make_unique<dynamics::forces::Drag>(cd, area));
+    }
+
+    // gravity + drag + atmosphere + wind
+    static void configureWithWind(dynamics::PhysicsWorld& world,
+        const math::Vec3& wind,
+        float area = constants::DEFAULT_SPHERE_AREA,
+        float cd = constants::DEFAULT_SPHERE_CD)
+    {
+        world.clear();
+        world.addForce(std::make_unique<dynamics::forces::Gravity>());
+        world.addEnvironment(std::make_unique<dynamics::environment::Atmosphere>());
+        world.addEnvironment(std::make_unique<dynamics::environment::Wind>(wind));
+        world.addForce(std::make_unique<dynamics::forces::Drag>(cd, area));
+    }
 };
 
 } // namespace preset

@@ -1,5 +1,5 @@
 /*
- * GravityForce.h
+ * Gravity.h
  */
 
 #pragma once
@@ -11,12 +11,12 @@ namespace BulletPhysic {
 namespace dynamics {
 namespace forces {
 
-class GravityForce : public IForce {
+class Gravity : public IForce {
 public:
-    explicit GravityForce(const math::Vec3& gravity = constants::GRAVITY) : m_gravity(gravity) {}
+    explicit Gravity(const math::Vec3& gravity = constants::GRAVITY) : m_gravity(gravity) {}
 
     // gravity: F = m * g
-    void apply(RigidBody& rb, float /*dt*/) override
+    void apply(RigidBody& rb, const PhysicsContext& /*context*/, float /*dt*/) override
     {
         if (rb.mass() > 0.0f)
         {

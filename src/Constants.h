@@ -22,7 +22,6 @@ inline constexpr float GAS_CONSTANT_DRY_AIR = 287.05f;    // J/(kg·K)
 // default rigid body (sphere) constants
 static constexpr float DEFAULT_SPHERE_AREA      = 0.01f;      // m^2
 static constexpr float DEFAULT_SPHERE_CD        = 0.47f;
-static constexpr float DEFAULT_SPHERE_LINEAR_B  = 1.93e-5f;   // kg/s
 
 } // namespace constants
 } // namespace BulletPhysic
