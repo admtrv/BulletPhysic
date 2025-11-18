@@ -17,6 +17,7 @@ public:
     std::optional<float> density;       // kg/m^3
     std::optional<float> temperature;   // K
     std::optional<float> pressure;      // Pa
+    std::optional<float> humidity;      // % (relative humidity 0-100)
     std::optional<math::Vec3> wind;     // m/s
 
     void reset()
@@ -24,6 +25,7 @@ public:
         density.reset();
         temperature.reset();
         pressure.reset();
+        humidity.reset();
         wind.reset();
     }
 };

@@ -9,6 +9,7 @@
 #include "dynamics/forces/Gravity.h"
 #include "dynamics/forces/Drag.h"
 #include "dynamics/environment/Atmosphere.h"
+#include "dynamics/environment/Humidity.h"
 #include "dynamics/environment/Wind.h"
 
 namespace BulletPhysic {
@@ -18,7 +19,8 @@ namespace preset {
 enum class Preset {
     GRAVITY_ONLY,       // parabolic trajectory
     WITH_DRAG,          // + air drag
-    WITH_ATMOSPHERE,    // + variable density with altitude
+    WITH_ATMOSPHERE,    // + variable density with altitude (dry air, ISA model)
+    WITH_HUMIDITY,      // + humidity effects (corrects density for water vapor)
     WITH_WIND,          // + wind
     CUSTOM
 };
@@ -29,6 +31,7 @@ public:
     static void configure(dynamics::PhysicsWorld& world,
         Preset level,
         const math::Vec3& wind = math::Vec3{0.0f, 0.0f, 0.0f},
+        float humidity = 50.0f,
         float area = constants::DEFAULT_SPHERE_AREA,
         float cd = constants::DEFAULT_SPHERE_CD)
     {
@@ -43,8 +46,11 @@ public:
         case Preset::WITH_ATMOSPHERE:
             configureWithAtmosphere(world, area, cd);
             break;
+        case Preset::WITH_HUMIDITY:
+            configureWithHumidity(world, humidity, area, cd);
+            break;
         case Preset::WITH_WIND:
-            configureWithWind(world, wind, area, cd);
+            configureWithWind(world, wind, humidity, area, cd);
             break;
         case Preset::CUSTOM:
             // user configures manually - just clear
@@ -81,15 +87,30 @@ public:
         world.addForce(std::make_unique<dynamics::forces::Drag>(cd, area));
     }
 
-    // gravity + drag + atmosphere + wind
-    static void configureWithWind(dynamics::PhysicsWorld& world,
-        const math::Vec3& wind,
+    // gravity + drag + atmosphere + humidity
+    static void configureWithHumidity(dynamics::PhysicsWorld& world,
+        float humidity = 50.0f,
         float area = constants::DEFAULT_SPHERE_AREA,
         float cd = constants::DEFAULT_SPHERE_CD)
     {
         world.clear();
         world.addForce(std::make_unique<dynamics::forces::Gravity>());
         world.addEnvironment(std::make_unique<dynamics::environment::Atmosphere>());
+        world.addEnvironment(std::make_unique<dynamics::environment::Humidity>(humidity));
+        world.addForce(std::make_unique<dynamics::forces::Drag>(cd, area));
+    }
+
+    // gravity + drag + atmosphere + humidity + wind
+    static void configureWithWind(dynamics::PhysicsWorld& world,
+        const math::Vec3& wind,
+        float humidity = 50.0f,
+        float area = constants::DEFAULT_SPHERE_AREA,
+        float cd = constants::DEFAULT_SPHERE_CD)
+    {
+        world.clear();
+        world.addForce(std::make_unique<dynamics::forces::Gravity>());
+        world.addEnvironment(std::make_unique<dynamics::environment::Atmosphere>());
+        world.addEnvironment(std::make_unique<dynamics::environment::Humidity>(humidity));
         world.addEnvironment(std::make_unique<dynamics::environment::Wind>(wind));
         world.addForce(std::make_unique<dynamics::forces::Drag>(cd, area));
     }

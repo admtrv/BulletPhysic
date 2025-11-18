@@ -23,10 +23,10 @@ public:
         float altitude = std::max(0.0f, std::min(rb.position().y - m_groundY, constants::TROPOSPHERE_MAX));
 
         // linear temperature decrease: T = T0 - L * h
-        float temperature = constants::SEA_LEVEL_TEMPERATURE - constants::LAPSE_RATE * altitude;
+        float temperature = constants::BASE_TEMPERATURE - constants::LAPSE_RATE * altitude;
 
         // barometric formula: p = p0 * (T / T0)^(g / (R * L)) = p0 * (T / T0)^exp
-        float pressure = constants::SEA_LEVEL_PRESSURE * std::pow(temperature / constants::SEA_LEVEL_TEMPERATURE, BAROMETRIC_EXP);
+        float pressure = constants::BASE_ATMOSPHERIC_PRESSURE * std::pow(temperature / constants::BASE_TEMPERATURE, BAROMETRIC_EXP);
 
         // ideal gas law: rho = p / (R * T)
         float density = pressure / (constants::GAS_CONSTANT_DRY_AIR * temperature);

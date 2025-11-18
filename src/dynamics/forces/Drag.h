@@ -36,7 +36,7 @@ public:
         }
 
         // get air density from context or use default
-        float rho = context.density.value_or(constants::SEA_LEVEL_DENSITY);
+        float rho = context.density.value_or(constants::BASE_ATMOSPHERIC_DENSITY);
 
         // F = -0.5 * rho * Cd * A * |v| * v
         float coeff = -0.5f * rho * m_dragCoefficient * m_area * velMag;
