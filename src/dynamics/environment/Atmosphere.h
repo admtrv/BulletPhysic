@@ -13,20 +13,27 @@ namespace BulletPhysic {
 namespace dynamics {
 namespace environment {
 
-// provides atmospheric properties based on altitude (ISA model)
+// provides atmospheric properties based on altitude (ISA model for Troposphere)
 class Atmosphere : public IEnvironment {
 public:
-    Atmosphere(float groundY = 0.0f) : m_groundY(groundY) {}
+    explicit Atmosphere(
+        float baseTemperature = constants::BASE_TEMPERATURE,
+        float basePressure = constants::BASE_ATMOSPHERIC_PRESSURE,
+        float groundY = 0.0f)
+            : m_baseTemperature(baseTemperature)
+            , m_basePressure(basePressure)
+            , m_groundY(groundY)
+    {}
 
     void update(PhysicsContext& context, const RigidBody& rb) override
     {
         float altitude = std::max(0.0f, std::min(rb.position().y - m_groundY, constants::TROPOSPHERE_MAX));
 
         // linear temperature decrease: T = T0 - L * h
-        float temperature = constants::BASE_TEMPERATURE - constants::LAPSE_RATE * altitude;
+        float temperature = m_baseTemperature - constants::LAPSE_RATE * altitude;
 
-        // barometric formula: p = p0 * (T / T0)^(g / (R * L)) = p0 * (T / T0)^exp
-        float pressure = constants::BASE_ATMOSPHERIC_PRESSURE * std::pow(temperature / constants::BASE_TEMPERATURE, BAROMETRIC_EXP);
+        // barometric formula: p = p0 * (T / T0)^(g / (R * L))
+        float pressure = m_basePressure * std::pow(temperature / m_baseTemperature, BAROMETRIC_EXP);
 
         // ideal gas law: rho = p / (R * T)
         float density = pressure / (constants::GAS_CONSTANT_DRY_AIR * temperature);
@@ -44,6 +51,8 @@ private:
 
     std::string m_name = "Atmosphere";
     float m_groundY;
+    float m_baseTemperature;      // K
+    float m_basePressure;         // Pa
 };
 
 } // namespace environment
