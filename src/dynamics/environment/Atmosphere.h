@@ -38,9 +38,9 @@ public:
         // ideal gas law: rho = p / (R * T)
         float density = pressure / (constants::GAS_CONSTANT_DRY_AIR * temperature);
 
-        context.temperature = temperature;
-        context.pressure = pressure;
-        context.density = density;
+        context.airTemperature = temperature;
+        context.airPressure = pressure;
+        context.airDensity = density;
     }
 
     const std::string& getName() const override { return m_name; }

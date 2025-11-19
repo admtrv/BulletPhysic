@@ -25,20 +25,20 @@ public:
     void update(PhysicsContext& context, const RigidBody& /*rb*/) override
     {
         // store relative humidity in context
-        context.humidity = m_relativeHumidity;
+        context.airHumidity = m_relativeHumidity;
 
         // density correction requires pressure and temperature from Atmosphere
-        if (!context.pressure.has_value() || !context.temperature.has_value() || !context.density.has_value())
+        if (!context.airPressure.has_value() || !context.airTemperature.has_value() || !context.airDensity.has_value())
         {
             return;
         }
 
-        float temperature = *context.temperature;
-        float pressure = *context.pressure;
-        float density = *context.density;
+        float temperature = *context.airTemperature;
+        float pressure = *context.airPressure;
+        float density = *context.airDensity;
 
         // apply humidity correction
-        context.density = correctDensityForHumidity(density, temperature, pressure, m_relativeHumidity);
+        context.airDensity = correctDensityForHumidity(density, temperature, pressure, m_relativeHumidity);
     }
 
     const std::string& getName() const override { return m_name; }

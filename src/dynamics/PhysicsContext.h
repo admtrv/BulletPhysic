@@ -14,19 +14,31 @@ namespace dynamics {
 // shared context for physics simulation (environment provides, forces consume)
 class PhysicsContext {
 public:
-    std::optional<float> density;       // kg/m^3
-    std::optional<float> temperature;   // K
-    std::optional<float> pressure;      // Pa
-    std::optional<float> humidity;      // % (relative humidity 0-100)
-    std::optional<math::Vec3> wind;     // m/s
+    std::optional<float> airDensity;        // kg/m^3
+    std::optional<float> airTemperature;    // K
+    std::optional<float> airPressure;       // Pa
+    std::optional<float> airHumidity;       // % (relative humidity 0-100)
+    std::optional<math::Vec3> wind;         // m/s
+
+    std::optional<double> latitude;         // rad
+    std::optional<double> longitude;        // rad
+    std::optional<double> altitude;         // m (above sea level)
+
+    std::optional<float> gravity;           // m/s^2 (gravity acceleration magnitude)
 
     void reset()
     {
-        density.reset();
-        temperature.reset();
-        pressure.reset();
-        humidity.reset();
+        airDensity.reset();
+        airTemperature.reset();
+        airPressure.reset();
+        airHumidity.reset();
         wind.reset();
+
+        latitude.reset();
+        longitude.reset();
+        altitude.reset();
+
+        gravity.reset();
     }
 };
 

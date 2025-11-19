@@ -8,9 +8,11 @@
 #include "dynamics/PhysicsWorld.h"
 #include "dynamics/forces/Gravity.h"
 #include "dynamics/forces/Drag.h"
+#include "dynamics/forces/Coriolis.h"
 #include "dynamics/environment/Atmosphere.h"
 #include "dynamics/environment/Humidity.h"
 #include "dynamics/environment/Wind.h"
+#include "dynamics/environment/Geographic.h"
 
 namespace BulletPhysic {
 namespace preset {
@@ -22,6 +24,7 @@ enum class Preset {
     WITH_ATMOSPHERE,    // + variable density with altitude (dry air, ISA model)
     WITH_HUMIDITY,      // + humidity effects (corrects density for water vapor)
     WITH_WIND,          // + wind
+    WITH_CORIOLIS,      // + Coriolis force
     CUSTOM
 };
 
@@ -33,7 +36,9 @@ public:
         const math::Vec3& wind = math::Vec3{0.0f, 0.0f, 0.0f},
         float humidity = 50.0f,
         float area = constants::DEFAULT_SPHERE_AREA,
-        float cd = constants::DEFAULT_SPHERE_CD)
+        float cd = constants::DEFAULT_SPHERE_CD,
+        double latitude = 0.0,
+        double longitude = 0.0)
     {
         switch (level)
         {
@@ -51,6 +56,9 @@ public:
             break;
         case Preset::WITH_WIND:
             configureWithWind(world, wind, humidity, area, cd);
+            break;
+        case Preset::WITH_CORIOLIS:
+            configureWithCoriolis(world, wind, humidity, area, cd, latitude, longitude);
             break;
         case Preset::CUSTOM:
             // user configures manually - just clear
@@ -113,6 +121,25 @@ public:
         world.addEnvironment(std::make_unique<dynamics::environment::Humidity>(humidity));
         world.addEnvironment(std::make_unique<dynamics::environment::Wind>(wind));
         world.addForce(std::make_unique<dynamics::forces::Drag>(cd, area));
+    }
+
+    // gravity + drag + atmosphere + humidity + wind + Coriolis
+    static void configureWithCoriolis(dynamics::PhysicsWorld& world,
+        const math::Vec3& wind,
+        float humidity = 50.0f,
+        float area = constants::DEFAULT_SPHERE_AREA,
+        float cd = constants::DEFAULT_SPHERE_CD,
+        double latitude = 0.0,
+        double longitude = 0.0)
+    {
+        world.clear();
+        world.addForce(std::make_unique<dynamics::forces::Gravity>());
+        world.addEnvironment(std::make_unique<dynamics::environment::Atmosphere>());
+        world.addEnvironment(std::make_unique<dynamics::environment::Humidity>(humidity));
+        world.addEnvironment(std::make_unique<dynamics::environment::Wind>(wind));
+        world.addEnvironment(std::make_unique<dynamics::environment::Geographic>(latitude, longitude));
+        world.addForce(std::make_unique<dynamics::forces::Drag>(cd, area));
+        world.addForce(std::make_unique<dynamics::forces::Coriolis>());
     }
 };
 

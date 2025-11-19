@@ -16,11 +16,19 @@ public:
     explicit Gravity(const math::Vec3& gravity = constants::GRAVITY) : m_gravity(gravity) {}
 
     // gravity: F = m * g
-    void apply(RigidBody& rb, const PhysicsContext& /*context*/, float /*dt*/) override
+    void apply(RigidBody& rb, const PhysicsContext& context, float /*dt*/) override
     {
         if (rb.mass() > 0.0f)
         {
-            rb.addForce(m_gravity * rb.mass());
+            // if Geographic corrected gravity magnitude
+            if (context.gravity.has_value())
+            {
+                rb.addForce(math::Vec3{0.0f, -*context.gravity, 0.0f} * rb.mass());
+            }
+            else
+            {
+                rb.addForce(m_gravity * rb.mass());
+            }
         }
     }
 
