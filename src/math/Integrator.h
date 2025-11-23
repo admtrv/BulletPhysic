@@ -21,6 +21,11 @@ public:
     void step(dynamics::RigidBody& rb, dynamics::PhysicsWorld* world, float dt) override;
 };
 
+class MidpointIntegrator final : public IIntegrator {
+public:
+    void step(dynamics::RigidBody& rb, dynamics::PhysicsWorld* world, float dt) override;
+};
+
 class RK4Integrator final : public IIntegrator {
 public:
     void step(dynamics::RigidBody& rb, dynamics::PhysicsWorld* world, float dt) override;

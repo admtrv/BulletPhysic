@@ -10,7 +10,7 @@ namespace BulletPhysic {
 namespace constants {
 
 // physical
-inline math::Vec3 GRAVITY{0.0f, -9.81f, 0.0f};
+inline math::Vec3 GRAVITY{0.0f, -9.80665f, 0.0f};
 
 // conversion
 inline constexpr float CELSIUS_TO_KELVIN = 273.15f;     // between Celsius and Kelvin

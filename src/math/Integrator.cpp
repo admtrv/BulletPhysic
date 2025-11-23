@@ -33,6 +33,55 @@ void EulerIntegrator::step(dynamics::RigidBody& rb, dynamics::PhysicsWorld* worl
     rb.clearForces();
 }
 
+void MidpointIntegrator::step(dynamics::RigidBody& rb, dynamics::PhysicsWorld* world, float dt)
+{
+    // clear previous forces
+    rb.clearForces();
+
+    const Vec3 x0 = rb.position();
+    const Vec3 v0 = rb.velocity();
+
+    // helper lambda to calculate acceleration at given state
+    auto calcAccel = [&](const Vec3& pos, const Vec3& vel) -> Vec3
+    {
+        // temporarily set state
+        dynamics::RigidBody tempRb = rb;
+        tempRb.setState(pos, vel);
+        tempRb.clearForces();
+
+        if (world)
+        {
+            world->applyForces(tempRb, dt);
+        }
+
+        Vec3 a = {0, 0, 0};
+        if (tempRb.mass() > 0.0f)
+        {
+            a = tempRb.forceAccum() / tempRb.mass();
+        }
+
+        return a;
+    };
+
+    // RK2 (Midpoint) steps
+    Vec3 a0 = calcAccel(x0, v0);
+
+    const Vec3 k1_v = a0 * dt;
+    const Vec3 k1_x = v0 * dt;
+
+    // evaluate at midpoint
+    Vec3 a_mid = calcAccel(x0 + k1_x * 0.5f, v0 + k1_v * 0.5f);
+    const Vec3 k2_v = a_mid * dt;
+    const Vec3 k2_x = (v0 + k1_v * 0.5f) * dt;
+
+    // combine steps
+    Vec3 v = v0 + k2_v;
+    Vec3 x = x0 + k2_x;
+
+    rb.setState(x, v);
+    rb.clearForces();
+}
+
 void RK4Integrator::step(dynamics::RigidBody& rb, dynamics::PhysicsWorld* world, float dt)
 {
     // clear previous forces
