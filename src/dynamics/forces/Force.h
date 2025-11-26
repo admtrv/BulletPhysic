@@ -19,7 +19,7 @@ public:
     virtual ~IForce() = default;
 
     // apply force to rigid body using context
-    virtual void apply(RigidBody& rb, const PhysicsContext& context, float dt) = 0;
+    virtual void apply(RigidBody& rb, PhysicsContext& context, float dt) = 0;
 
     // check if this force should be active
     virtual bool isActive() const { return true; }

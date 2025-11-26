@@ -20,6 +20,7 @@ inline constexpr float TROPOSPHERE_MAX = 11000.0f;                      // m (tr
 inline constexpr float BASE_TEMPERATURE = 15 + CELSIUS_TO_KELVIN;       // K (15 C)
 inline constexpr float BASE_ATMOSPHERIC_PRESSURE = 101325.0f;           // Pa
 inline constexpr float BASE_ATMOSPHERIC_DENSITY = 1.225f;               // kg/m^3 (dry air)
+inline constexpr float BASE_SPEED_OF_SOUND = 340.294f;                  // m/s
 inline constexpr float LAPSE_RATE = 0.0065f;                            // K/m (temperature lapse rate)
 inline constexpr float GAS_CONSTANT_DRY_AIR = 287.058f;                 // J/(kg·K)
 

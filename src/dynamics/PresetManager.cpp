@@ -5,7 +5,7 @@
 #include "PresetManager.h"
 #include "PhysicsWorld.h"
 #include "forces/Gravity.h"
-#include "forces/Drag.h"
+#include "forces/drag/Drag.h"
 #include "forces/Coriolis.h"
 #include "environment/Atmosphere.h"
 #include "environment/Humidity.h"
@@ -54,7 +54,7 @@ void PresetManager::configureWithDrag(PhysicsWorld& world, const PresetArgs& arg
 {
     world.clear();
     world.addForce(std::make_unique<forces::Gravity>());
-    world.addForce(std::make_unique<forces::Drag>(args.cd, args.area));
+    world.addForce(std::make_unique<forces::drag::Drag>(args.cd, args.area));
 }
 
 void PresetManager::configureWithAtmosphere(PhysicsWorld& world, const PresetArgs& args)
@@ -62,7 +62,7 @@ void PresetManager::configureWithAtmosphere(PhysicsWorld& world, const PresetArg
     world.clear();
     world.addForce(std::make_unique<forces::Gravity>());
     world.addEnvironment(std::make_unique<environment::Atmosphere>());
-    world.addForce(std::make_unique<forces::Drag>(args.cd, args.area));
+    world.addForce(std::make_unique<forces::drag::Drag>(args.cd, args.area));
 }
 
 void PresetManager::configureWithHumidity(PhysicsWorld& world, const PresetArgs& args)
@@ -71,7 +71,7 @@ void PresetManager::configureWithHumidity(PhysicsWorld& world, const PresetArgs&
     world.addForce(std::make_unique<forces::Gravity>());
     world.addEnvironment(std::make_unique<environment::Atmosphere>());
     world.addEnvironment(std::make_unique<environment::Humidity>(args.humidity));
-    world.addForce(std::make_unique<forces::Drag>(args.cd, args.area));
+    world.addForce(std::make_unique<forces::drag::Drag>(args.cd, args.area));
 }
 
 void PresetManager::configureWithWind(PhysicsWorld& world, const PresetArgs& args)
@@ -81,7 +81,7 @@ void PresetManager::configureWithWind(PhysicsWorld& world, const PresetArgs& arg
     world.addEnvironment(std::make_unique<environment::Atmosphere>());
     world.addEnvironment(std::make_unique<environment::Humidity>(args.humidity));
     world.addEnvironment(std::make_unique<environment::Wind>(args.wind));
-    world.addForce(std::make_unique<forces::Drag>(args.cd, args.area));
+    world.addForce(std::make_unique<forces::drag::Drag>(args.cd, args.area));
 }
 
 void PresetManager::configureWithCoriolis(PhysicsWorld& world, const PresetArgs& args)
@@ -92,7 +92,7 @@ void PresetManager::configureWithCoriolis(PhysicsWorld& world, const PresetArgs&
     world.addEnvironment(std::make_unique<environment::Humidity>(args.humidity));
     world.addEnvironment(std::make_unique<environment::Wind>(args.wind));
     world.addEnvironment(std::make_unique<environment::Geographic>(args.latitude, args.longitude));
-    world.addForce(std::make_unique<forces::Drag>(args.cd, args.area));
+    world.addForce(std::make_unique<forces::drag::Drag>(args.cd, args.area));
     world.addForce(std::make_unique<forces::Coriolis>());
 }
 

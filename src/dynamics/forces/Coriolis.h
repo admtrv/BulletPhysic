@@ -17,7 +17,7 @@ class Coriolis : public IForce {
 public:
     explicit Coriolis() {}
 
-    void apply(RigidBody& rb, const PhysicsContext& context, float /*dt*/) override
+    void apply(RigidBody& rb, PhysicsContext& context, float /*dt*/) override
     {
         // requires Geographic environment
         if (!context.latitude.has_value())

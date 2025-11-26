@@ -16,7 +16,7 @@ public:
     explicit Gravity(const math::Vec3& gravity = constants::GRAVITY) : m_gravity(gravity) {}
 
     // gravity: F = m * g
-    void apply(RigidBody& rb, const PhysicsContext& context, float /*dt*/) override
+    void apply(RigidBody& rb, PhysicsContext& context, float /*dt*/) override
     {
         if (rb.mass() > 0.0f)
         {
