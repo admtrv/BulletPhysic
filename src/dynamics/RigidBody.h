@@ -22,8 +22,8 @@ public:
 
     void setMass(float mass);
     void setPosition(const math::Vec3& pos);
-    void setVelocity(const math::Vec3& vel);
-    void setVelocityFromAngles(float speed, float elevationDeg, float azimuthDeg);
+    virtual void setVelocity(const math::Vec3& vel);
+    virtual void setVelocityFromAngles(float speed, float elevationDeg, float azimuthDeg);
 
     void addForce(const math::Vec3& f);
     void clearForces();
@@ -73,11 +73,12 @@ public:
                 LEFT
             };
 
-            float twistRate;        // n in calibers per turn
+            float twistRate;        // n (calibers per turn)
             Direction direction;
         };
 
         std::optional<Rifling> rifling;
+        std::optional<float> spinRate;  // initial spin rate (rad/s)
     };
 
     // constructors
@@ -86,6 +87,10 @@ public:
 
     std::unique_ptr<RigidBody> clone() const override;
 
+    // override to calculate spin rate on first velocity set
+    void setVelocity(const math::Vec3& vel) override;
+    void setVelocityFromAngles(float speed, float elevationDeg, float azimuthDeg) override;
+
     // getters
     const ProjectileSpecs& getSpecs() const { return m_specs; }
     ProjectileSpecs& getSpecs() { return m_specs; }
@@ -93,6 +98,7 @@ public:
     // helpers
     static float calculateArea(float diameter);
     static float calculateMomentOfInertiaX(float mass, float diameter);
+    static float calculateSpinRate(float velocity, float twistRate, float diameter);
 
 private:
     ProjectileSpecs m_specs;
