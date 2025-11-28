@@ -72,7 +72,7 @@ float DragCurve::getCd(float mach) const
 {
     if (m_machNumbers.empty())
     {
-        return constants::DEFAULT_SPHERE_CD;  // default fallback
+        return constants::DEFAULT_CD;  // default fallback
     }
 
     // clamp to range

@@ -38,8 +38,8 @@ public:
         // Mach = u / c
         float mach = velocityMagnitude / constants::BASE_SPEED_OF_SOUND;
 
-        float cd = constants::DEFAULT_SPHERE_CD;
-        float area = constants::DEFAULT_SPHERE_AREA;
+        float cd = constants::DEFAULT_CD;
+        float area = constants::DEFAULT_AREA;
 
         if (auto* projectile = dynamic_cast<const ProjectileRigidBody*>(&rb))
         {

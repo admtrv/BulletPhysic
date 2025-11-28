@@ -59,12 +59,28 @@ ProjectileRigidBody::ProjectileRigidBody(const ProjectileSpecs& specs) : RigidBo
     {
         m_specs.area = calculateArea(m_specs.diameter.value());
     }
+
+    if (!m_specs.momentOfInertiaX.has_value() && m_specs.diameter.has_value())
+    {
+        m_specs.momentOfInertiaX = calculateMomentOfInertiaX(specs.mass, m_specs.diameter.value());
+    }
+}
+
+std::unique_ptr<RigidBody> ProjectileRigidBody::clone() const
+{
+    return std::make_unique<ProjectileRigidBody>(*this);
 }
 
 float ProjectileRigidBody::calculateArea(float diameter)
 {
     // cross-sectional area: S = pi * d ^ 2 / 4
     return math::constants::PI * diameter * diameter * 0.25f;
+}
+
+float ProjectileRigidBody::calculateMomentOfInertiaX(float mass, float diameter)
+{
+    // uniform cylinder approximation: Ix = 1/8 * m * d^2
+    return 0.125f * mass * diameter * diameter;
 }
 
 } // namespace dynamics

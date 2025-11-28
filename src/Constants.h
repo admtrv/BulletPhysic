@@ -37,9 +37,12 @@ inline constexpr double EARTH_SEMI_MAJOR_AXIS = 6378137.0;              // m (a,
 inline constexpr double EARTH_SEMI_MINOR_AXIS = 6356752.314245;         // m (b, or polar radius)
 inline constexpr double EARTH_ECCENTRICITY_SQUARED = 6.69437999014e-3;  // e^2
 
-// default rigid body (sphere) constants
-static constexpr float DEFAULT_SPHERE_AREA = 0.01f;     // m^2
-static constexpr float DEFAULT_SPHERE_CD = 0.47f;
+// default projectile constants
+static constexpr float DEFAULT_AREA = 0.001f;     // m^2
+static constexpr float DEFAULT_CD = 0.3f;
+static constexpr float DEFAULT_C_M_ALPHA = 4.0f;
+static constexpr float DEFAULT_C_L_ALPHA = 0.10f;
+static constexpr float DEFAULT_C_MAG_F = 0.10f;
 
 } // namespace constants
 } // namespace BulletPhysic

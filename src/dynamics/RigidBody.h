@@ -56,10 +56,16 @@ public:
     struct ProjectileSpecs {
         float mass;  // kg
 
-        std::optional<float> area;      // m^2 (cross-sectional area for drag)
+        std::optional<float> area;      // m^2 (cross-sectional area)
         std::optional<float> diameter;  // m (caliber)
 
         std::optional<forces::drag::DragCurveModel> dragModel;
+
+        float overtuningCoefficient = constants::DEFAULT_C_M_ALPHA;     // C_M_alpha
+        float liftCoefficient = constants::DEFAULT_C_L_ALPHA;           // C_L_alpha
+        float MagnusCoefficient = constants::DEFAULT_C_MAG_F;           // C_mag_f
+
+        std::optional<float> momentOfInertiaX;
 
         struct Rifling {
             enum class Direction {
@@ -67,8 +73,8 @@ public:
                 LEFT
             };
 
-            float twistRate;    // n in calibers per turn
-            Direction direction = Direction::RIGHT;
+            float twistRate;        // n in calibers per turn
+            Direction direction;
         };
 
         std::optional<Rifling> rifling;
@@ -78,17 +84,15 @@ public:
     ProjectileRigidBody() : RigidBody(), m_specs{1.0f} {}
     explicit ProjectileRigidBody(const ProjectileSpecs& specs);
 
+    std::unique_ptr<RigidBody> clone() const override;
+
     // getters
     const ProjectileSpecs& getSpecs() const { return m_specs; }
     ProjectileSpecs& getSpecs() { return m_specs; }
 
     // helpers
     static float calculateArea(float diameter);
-
-    std::unique_ptr<RigidBody> clone() const override
-    {
-        return std::make_unique<ProjectileRigidBody>(*this);
-    }
+    static float calculateMomentOfInertiaX(float mass, float diameter);
 
 private:
     ProjectileSpecs m_specs;
