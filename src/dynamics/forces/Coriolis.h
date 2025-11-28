@@ -15,7 +15,6 @@ namespace forces {
 
 class Coriolis : public IForce {
 public:
-    explicit Coriolis() {}
 
     void apply(RigidBody& rb, PhysicsContext& context, float /*dt*/) override
     {
@@ -27,12 +26,6 @@ public:
 
         double latitude = *context.latitude;
         math::Vec3 velocity = rb.velocity();
-
-        // skip if velocity is negligible
-        if (velocity.length() < 1e-6f)
-        {
-            return;
-        }
 
         // Earth's angular velocity vector in ENU frame
         // omega = (0, omega*cos(lat), omega*sin(lat))

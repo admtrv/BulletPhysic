@@ -3,6 +3,7 @@
  */
 
 #include "DragModel.h"
+#include <iostream>
 
 namespace BulletPhysic {
 namespace dynamics {
@@ -133,7 +134,12 @@ std::string StandardDragModel::getModelFilename(DragCurveModel model) const
 
 StandardDragModel::StandardDragModel(DragCurveModel model) : m_model(model) {
     std::string filename = getModelFilename(model);
-    m_curve.loadFromFile(filename);
+
+    bool loaded = m_curve.loadFromFile(filename);
+    if (!loaded)
+    {
+        std::cerr << "failed to load curve from: " << filename << std::endl;
+    }
 }
 
 float StandardDragModel::getCd(float mach) const

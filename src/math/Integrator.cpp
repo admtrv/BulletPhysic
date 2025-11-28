@@ -45,19 +45,19 @@ void MidpointIntegrator::step(dynamics::RigidBody& rb, dynamics::PhysicsWorld* w
     auto calcAccel = [&](const Vec3& pos, const Vec3& vel) -> Vec3
     {
         // temporarily set state
-        dynamics::RigidBody tempRb = rb;
-        tempRb.setState(pos, vel);
-        tempRb.clearForces();
+        auto tempRb = rb.clone();
+        tempRb->setState(pos, vel);
+        tempRb->clearForces();
 
         if (world)
         {
-            world->applyForces(tempRb, dt);
+            world->applyForces(*tempRb, dt);
         }
 
         Vec3 a = {0, 0, 0};
-        if (tempRb.mass() > 0.0f)
+        if (tempRb->mass() > 0.0f)
         {
-            a = tempRb.forceAccum() / tempRb.mass();
+            a = tempRb->forceAccum() / tempRb->mass();
         }
 
         return a;
@@ -94,19 +94,19 @@ void RK4Integrator::step(dynamics::RigidBody& rb, dynamics::PhysicsWorld* world,
     auto calcAccel = [&](const Vec3& pos, const Vec3& vel) -> Vec3
     {
         // temporarily set state
-        dynamics::RigidBody tempRb = rb;
-        tempRb.setState(pos, vel);
-        tempRb.clearForces();
+        auto tempRb = rb.clone();
+        tempRb->setState(pos, vel);
+        tempRb->clearForces();
 
         if (world)
         {
-            world->applyForces(tempRb, dt);
+            world->applyForces(*tempRb, dt);
         }
 
         Vec3 a = {0, 0, 0};
-        if (tempRb.mass() > 0.0f)
+        if (tempRb->mass() > 0.0f)
         {
-            a = tempRb.forceAccum() / tempRb.mass();
+            a = tempRb->forceAccum() / tempRb->mass();
         }
 
         return a;

@@ -51,5 +51,21 @@ void RigidBody::setState(const math::Vec3& pos, const math::Vec3& vel)
     m_velocity = vel;
 }
 
+ProjectileRigidBody::ProjectileRigidBody(const ProjectileSpecs& specs) : RigidBody(), m_specs(specs)
+{
+    setMass(specs.mass);
+
+    if (!m_specs.area.has_value() && m_specs.diameter.has_value())
+    {
+        m_specs.area = calculateArea(m_specs.diameter.value());
+    }
+}
+
+float ProjectileRigidBody::calculateArea(float diameter)
+{
+    // cross-sectional area: S = pi * d ^ 2 / 4
+    return math::constants::PI * diameter * diameter * 0.25f;
+}
+
 } // namespace dynamics
 } // namespace BulletPhysic

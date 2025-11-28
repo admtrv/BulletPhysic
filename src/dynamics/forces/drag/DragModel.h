@@ -20,13 +20,13 @@ namespace forces {
 namespace drag {
 
 // drag curve data file paths
-inline const std::string DRAG_CURVE_G1 = "BulletPhysic/assets/data/g1.txt";
-inline const std::string DRAG_CURVE_G2 = "BulletPhysic/assets/data/g2.txt";
-inline const std::string DRAG_CURVE_G5 = "BulletPhysic/assets/data/g5.txt";
-inline const std::string DRAG_CURVE_G6 = "BulletPhysic/assets/data/g6.txt";
-inline const std::string DRAG_CURVE_G7 = "BulletPhysic/assets/data/g7.txt";
-inline const std::string DRAG_CURVE_G8 = "BulletPhysic/assets/data/g8.txt";
-inline const std::string DRAG_CURVE_GL = "BulletPhysic/assets/data/gl.txt";
+inline const std::string DRAG_CURVE_G1 = "../BulletPhysic/assets/data/g1.txt";
+inline const std::string DRAG_CURVE_G2 = "../BulletPhysic/assets/data/g2.txt";
+inline const std::string DRAG_CURVE_G5 = "../BulletPhysic/assets/data/g5.txt";
+inline const std::string DRAG_CURVE_G6 = "../BulletPhysic/assets/data/g6.txt";
+inline const std::string DRAG_CURVE_G7 = "../BulletPhysic/assets/data/g7.txt";
+inline const std::string DRAG_CURVE_G8 = "../BulletPhysic/assets/data/g8.txt";
+inline const std::string DRAG_CURVE_GL = "../BulletPhysic/assets/data/gl.txt";
 
 enum class DragCurveModel {
     G1,

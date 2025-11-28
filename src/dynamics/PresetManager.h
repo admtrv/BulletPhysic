@@ -26,10 +26,6 @@ enum class Preset {
 
 // arguments structure as input
 struct PresetArgs {
-    // with drag
-    float area = constants::DEFAULT_SPHERE_AREA;
-    float cd = constants::DEFAULT_SPHERE_CD;
-
     // with humidity
     float humidity = 50.0f;
 
