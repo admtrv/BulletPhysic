@@ -40,14 +40,18 @@ public:
         // apply force: F = m * a
         if (rb.mass() > 0.0f)
         {
-            rb.addForce(coriolisAccel * rb.mass());
+            math::Vec3 force = coriolisAccel * rb.mass();
+            rb.addForce(force);
+            m_force = force;
         }
     }
 
     const std::string& getName() const override { return m_name; }
+    const std::string& getSymbol() const override { return m_symbol; }
 
 private:
     std::string m_name = "Coriolis";
+    std::string m_symbol = "Fc";
 };
 
 } // namespace forces

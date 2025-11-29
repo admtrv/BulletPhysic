@@ -38,9 +38,12 @@ public:
     // apply all forces to rigid body
     void applyForces(RigidBody& rb, float dt);
 
-    // get by name
+    // getters
     forces::IForce* getForce(const std::string& name);
     environment::IEnvironment* getEnvironment(const std::string& name);
+
+    const std::vector<std::unique_ptr<forces::IForce>>& getForces() const { return m_forces; }
+    const std::vector<std::unique_ptr<environment::IEnvironment>>& getEnvironments() const { return m_environments; }
 
     // counts
     size_t forceCount() const { return m_forces.size(); }

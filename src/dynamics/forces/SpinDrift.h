@@ -61,8 +61,6 @@ static math::Vec3 calculateYawOfRepose(const ProjectileRigidBody& projectile, co
 
 class Lift : public IForce {
 public:
-
-    // F_L = 1/2 * rho * S * C_L_alpha * V^2 * alpha_e
     void apply(RigidBody& rb, PhysicsContext& context, float /*dt*/) override
     {
         if (auto* projectile = dynamic_cast<const ProjectileRigidBody*>(&rb))
@@ -91,22 +89,24 @@ public:
             // yaw of repose
             math::Vec3 alpha_e = calculateYawOfRepose(*projectile, context, velocity);
 
-            math::Vec3 liftForce = 0.5f * rho * S * C_L_alpha * velocityMagnitudePow2 * alpha_e;
+            // F_L = 1/2 * rho * S * C_L_alpha * V^2 * alpha_e
+            math::Vec3 force = 0.5f * rho * S * C_L_alpha * velocityMagnitudePow2 * alpha_e;
 
-            rb.addForce(liftForce);
+            rb.addForce(force);
+            m_force = force;
         }
     }
 
     const std::string& getName() const override { return m_name; }
+    const std::string& getSymbol() const override { return m_symbol; }
 
 private:
     std::string m_name = "Lift";
+    std::string m_symbol = "Fl";
 };
 
 class Magnus : public IForce {
 public:
-
-    // F_M = -1/2 * rho * S * d * p * C_mag_f * (alpha_e x V)
     void apply(RigidBody& rb, PhysicsContext& context, float /*dt*/) override
     {
         if (auto* projectile = dynamic_cast<const ProjectileRigidBody*>(&rb))
@@ -138,39 +138,31 @@ public:
 
             math::Vec3 alphaCrossV = alpha_e.cross(velocity);
 
-            math::Vec3 magnusForce = -0.5f * rho * S * d * p * C_mag_f * alphaCrossV;
+            // F_M = -1/2 * rho * S * d * p * C_mag_f * (alpha_e x V)
+            math::Vec3 force = -0.5f * rho * S * d * p * C_mag_f * alphaCrossV;
 
-            rb.addForce(magnusForce);
+            rb.addForce(force);
+            m_force = force;
         }
     }
 
     const std::string& getName() const override { return m_name; }
+    const std::string& getSymbol() const override { return m_symbol; }
 
 private:
     std::string m_name = "Magnus";
+    std::string m_symbol = "Fm";
 };
 
-// combined spin drift related forces: Lift + Magnus
-class SpinDrift : public IForce {
+// spin drift influence
+class SpinDrift {
 public:
-    SpinDrift()
-        : m_lift(std::make_unique<Lift>())
-        , m_magnus(std::make_unique<Magnus>())
-    {}
-
-    void apply(RigidBody& rb, PhysicsContext& context, float dt) override
+    template<typename PhysicsWorldType>
+    static void addTo(PhysicsWorldType& world)
     {
-        m_lift->apply(rb, context, dt);
-        m_magnus->apply(rb, context, dt);
+        world.addForce(std::make_unique<Lift>());
+        world.addForce(std::make_unique<Magnus>());
     }
-
-    const std::string& getName() const override { return m_name; }
-
-private:
-    std::string m_name = "Spin Drift Influence";
-
-    std::unique_ptr<Lift> m_lift;
-    std::unique_ptr<Magnus> m_magnus;
 };
 
 } // namespace forces

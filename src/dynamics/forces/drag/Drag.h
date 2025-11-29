@@ -54,16 +54,19 @@ public:
             }
         }
 
-        // F = -0.5 * rho * S * Cd * v * |v|
-        math::Vec3 force = -0.5f * rho * area * cd * velocity * velocityMagnitude ;
+        // F_d = -0.5 * rho * S * Cd * v * |v|
+        math::Vec3 force = -0.5f * rho * area * cd * velocity * velocityMagnitude;
 
         rb.addForce(force);
+        m_force = force;
     }
 
     const std::string& getName() const override { return m_name; }
+    const std::string& getSymbol() const override { return m_symbol; }
 
 private:
-    std::string m_name = "Air Drag";
+    std::string m_name = "Aerodynamic Drag";
+    std::string m_symbol = "Fd";
 };
 
 } // namespace drag

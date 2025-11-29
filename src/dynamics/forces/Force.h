@@ -25,8 +25,13 @@ public:
     // check if this force should be active
     virtual bool isActive() const { return true; }
 
-    // get force name for identification
+    // getters
     virtual const std::string& getName() const = 0;
+    virtual const std::string& getSymbol() const = 0;
+    virtual math::Vec3 getForce() const { return m_force; }
+
+protected:
+    math::Vec3 m_force{0.0f, 0.0f, 0.0f};
 };
 
 } // namespace forces
