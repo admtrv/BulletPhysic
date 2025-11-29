@@ -35,7 +35,7 @@ public:
         // correct gravity
         geography::GeographicPosition currentPosition(m_reference.latitude, m_reference.longitude, altitudeAbove);
 
-        context.gravity = geography::Coordinates::gravitationalAccelerationAtGeodetic(currentPosition);
+        context.gravity = geography::gravitationalAccelerationAtGeodetic(currentPosition);
     }
 
     const std::string& getName() const override { return m_name; }
@@ -45,6 +45,7 @@ public:
 
 private:
     std::string m_name = "Geographic";
+
     geography::GeographicPosition m_reference;
     float m_groundY;
 };

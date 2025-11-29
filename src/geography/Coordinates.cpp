@@ -13,7 +13,7 @@ double ECEFPosition::r() const
     return std::sqrt(x * x + y * y + z * z);
 }
 
-ECEFPosition Coordinates::geodeticToECEF(const GeographicPosition& geodetic)
+ECEFPosition geodeticToECEF(const GeographicPosition& geodetic)
 {
     double lat = geodetic.latitude;
     double lon = geodetic.longitude;
@@ -35,7 +35,7 @@ ECEFPosition Coordinates::geodeticToECEF(const GeographicPosition& geodetic)
     return ecef;
 }
 
-GeographicPosition Coordinates::ecefToGeodetic(const ECEFPosition& ecef)
+GeographicPosition ecefToGeodetic(const ECEFPosition& ecef)
 {
     double x = ecef.x;
     double y = ecef.y;
@@ -62,7 +62,7 @@ GeographicPosition Coordinates::ecefToGeodetic(const ECEFPosition& ecef)
     return GeographicPosition(lat, lon, alt);
 }
 
-math::Vec3 Coordinates::ecefToENU(const ECEFPosition& point, const GeographicPosition& reference)
+math::Vec3 ecefToENU(const ECEFPosition& point, const GeographicPosition& reference)
 {
     ECEFPosition refEcef = geodeticToECEF(reference);
 
@@ -83,7 +83,7 @@ math::Vec3 Coordinates::ecefToENU(const ECEFPosition& point, const GeographicPos
     return math::Vec3(static_cast<float>(east), static_cast<float>(up), static_cast<float>(north));
 }
 
-ECEFPosition Coordinates::enuToECEF(const math::Vec3& enu, const GeographicPosition& reference)
+ECEFPosition enuToECEF(const math::Vec3& enu, const GeographicPosition& reference)
 {
     double east = enu.x;
     double up = enu.y;
@@ -103,13 +103,13 @@ ECEFPosition Coordinates::enuToECEF(const math::Vec3& enu, const GeographicPosit
     return ECEFPosition(refEcef.x + dx, refEcef.y + dy, refEcef.z + dz);
 }
 
-double Coordinates::gravitationalAcceleration(const ECEFPosition& position)
+double gravitationalAcceleration(const ECEFPosition& position)
 {
     double r = position.r();
     return constants::EARTH_GRAVITATIONAL_CONSTANT / (r * r);
 }
 
-double Coordinates::gravitationalAccelerationAtGeodetic(const GeographicPosition& position)
+double gravitationalAccelerationAtGeodetic(const GeographicPosition& position)
 {
     ECEFPosition ecef = geodeticToECEF(position);
     return gravitationalAcceleration(ecef);

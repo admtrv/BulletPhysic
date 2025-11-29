@@ -46,10 +46,11 @@ public:
     const std::string& getName() const override { return m_name; }
 
 private:
+    std::string m_name = "Atmosphere";
+
     // barometric formula exponent: g / (R * L)
     static inline const float BAROMETRIC_EXP = constants::GRAVITY.length() / (constants::GAS_CONSTANT_DRY_AIR * constants::LAPSE_RATE);
 
-    std::string m_name = "Atmosphere";
     float m_groundY;
     float m_baseTemperature;      // K
     float m_basePressure;         // Pa

@@ -27,30 +27,20 @@ struct ECEFPosition {
     ECEFPosition() : x(0.0), y(0.0), z(0.0) {}
     ECEFPosition(double x, double y, double z) : x(x), y(y), z(z) {}
 
-    double r() const;
+    double r() const;   // distance from Earth's center
 };
 
-// geographic coordinate conversions ECEF <-> Geodetic <-> ENU (classic local 3D coordinates, OpenGL like, Physics like)
-class Coordinates {
-public:
-    // convert geodetic (lat, lon, alt) to ECEF (x, y, z)
-    static ECEFPosition geodeticToECEF(const GeographicPosition& geodetic);
+// geographic coordinate conversions ECEF <-> Geodetic <-> ENU (standard in physics)
 
-    // convert ECEF (x, y, z) to geodetic (lat, lon, alt)
-    static GeographicPosition ecefToGeodetic(const ECEFPosition& ecef);
+ECEFPosition geodeticToECEF(const GeographicPosition& geodetic);                            // convert geodetic (lat, lon, alt) to ECEF (x, y, z)
+GeographicPosition ecefToGeodetic(const ECEFPosition& ecef);                                // convert ECEF (x, y, z) to geodetic (lat, lon, alt)
+math::Vec3 ecefToENU(const ECEFPosition& point, const GeographicPosition& reference);       // convert ECEF (x, y, z) to local ENU (East-North-Up) relative to reference point
+ECEFPosition enuToECEF(const math::Vec3& enu, const GeographicPosition& reference);         // convert local ENU (East-North-Up) to ECEF (x, y, z) relative to reference point
 
-    // convert ECEF to local ENU (East-North-Up) relative to reference point
-    static math::Vec3 ecefToENU(const ECEFPosition& point, const GeographicPosition& reference);
+// gravity calculation depend on location
 
-    // convert local ENU to ECEF relative to reference point
-    static ECEFPosition enuToECEF(const math::Vec3& enu, const GeographicPosition& reference);
-
-    // calculate gravitational acceleration at ECEF position
-    static double gravitationalAcceleration(const ECEFPosition& position);
-
-    // calculate gravitational acceleration at geodetic position
-    static double gravitationalAccelerationAtGeodetic(const GeographicPosition& position);
-};
+double gravitationalAcceleration(const ECEFPosition& position);                     // calculate gravitational acceleration at ECEF position
+double gravitationalAccelerationAtGeodetic(const GeographicPosition& position);     // calculate gravitational acceleration at geodetic position
 
 } // namespace geography
 } // namespace BulletPhysic

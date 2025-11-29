@@ -7,7 +7,7 @@
 namespace BulletPhysic {
 namespace dynamics {
 
-void PhysicsWorld::addForce(std::unique_ptr<IForce> force)
+void PhysicsWorld::addForce(std::unique_ptr<forces::IForce> force)
 {
     if (force)
     {
@@ -31,8 +31,9 @@ void PhysicsWorld::clear()
 
 void PhysicsWorld::applyForces(RigidBody& rb, float dt)
 {
-    // phase 1: environment providers update context
     m_context.reset();
+
+    // phase 1: environment providers update context
     for (auto& env : m_environments)
     {
         if (env)
@@ -51,7 +52,7 @@ void PhysicsWorld::applyForces(RigidBody& rb, float dt)
     }
 }
 
-IForce* PhysicsWorld::getForce(const std::string& name)
+forces::IForce* PhysicsWorld::getForce(const std::string& name)
 {
     for (auto& force : m_forces)
     {

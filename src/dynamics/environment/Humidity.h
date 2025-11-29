@@ -44,6 +44,10 @@ public:
     const std::string& getName() const override { return m_name; }
 
 private:
+    std::string m_name = "Humidity";
+
+    float m_relativeHumidity; // % (0-100)
+
     // Tetens approximation: p_sat = 0.61078 * exp((17.27 * (T - 273.15)) / (T - 35.85))
     static float saturationVaporPressure(float tempK)
     {
@@ -67,9 +71,6 @@ private:
 
         return rhoDry + densityVapor;
     }
-
-    std::string m_name = "Humidity";
-    float m_relativeHumidity; // % (0-100)
 };
 
 } // namespace environment

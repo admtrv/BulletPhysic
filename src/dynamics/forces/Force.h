@@ -12,6 +12,7 @@
 
 namespace BulletPhysic {
 namespace dynamics {
+namespace forces {
 
 // base interface for forces
 class IForce {
@@ -28,5 +29,6 @@ public:
     virtual const std::string& getName() const = 0;
 };
 
+} // namespace forces
 } // namespace dynamics
 } // namespace BulletPhysic

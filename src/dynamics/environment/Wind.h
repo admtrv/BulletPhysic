@@ -27,6 +27,7 @@ public:
 
 private:
     std::string m_name = "Wind";
+
     math::Vec3 m_velocity;
 };
 

@@ -11,15 +11,17 @@
 namespace BulletPhysic {
 namespace dynamics {
 
-// shared context for physics simulation (environment provides, forces consume)
+// shared context for physics simulation (environments provide, forces consume)
 class PhysicsContext {
 public:
+    // atmosphere context
     std::optional<float> airDensity;        // kg/m^3
     std::optional<float> airTemperature;    // K
     std::optional<float> airPressure;       // Pa
     std::optional<float> airHumidity;       // % (relative humidity 0-100)
     std::optional<math::Vec3> wind;         // m/s
 
+    // geographic context
     std::optional<double> latitude;         // rad
     std::optional<double> longitude;        // rad
     std::optional<double> altitude;         // m (above sea level)

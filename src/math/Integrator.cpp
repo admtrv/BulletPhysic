@@ -22,7 +22,7 @@ void EulerIntegrator::step(dynamics::RigidBody& rb, dynamics::PhysicsWorld* worl
     Vec3 a = {0, 0, 0};
     if (rb.mass() > 0.0f)
     {
-        a = rb.forceAccum() / rb.mass();
+        a = rb.accumulatedForces() / rb.mass();
     }
 
     // integrate
@@ -57,7 +57,7 @@ void MidpointIntegrator::step(dynamics::RigidBody& rb, dynamics::PhysicsWorld* w
         Vec3 a = {0, 0, 0};
         if (tempRb->mass() > 0.0f)
         {
-            a = tempRb->forceAccum() / tempRb->mass();
+            a = tempRb->accumulatedForces() / tempRb->mass();
         }
 
         return a;
@@ -106,7 +106,7 @@ void RK4Integrator::step(dynamics::RigidBody& rb, dynamics::PhysicsWorld* world,
         Vec3 a = {0, 0, 0};
         if (tempRb->mass() > 0.0f)
         {
-            a = tempRb->forceAccum() / tempRb->mass();
+            a = tempRb->accumulatedForces() / tempRb->mass();
         }
 
         return a;

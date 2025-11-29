@@ -29,7 +29,7 @@ public:
     PhysicsWorld& operator=(PhysicsWorld&&) = default;
 
     // add force or environment
-    void addForce(std::unique_ptr<IForce> force);
+    void addForce(std::unique_ptr<forces::IForce> force);
     void addEnvironment(std::unique_ptr<environment::IEnvironment> environment);
 
     // remove all
@@ -39,7 +39,7 @@ public:
     void applyForces(RigidBody& rb, float dt);
 
     // get by name
-    IForce* getForce(const std::string& name);
+    forces::IForce* getForce(const std::string& name);
     environment::IEnvironment* getEnvironment(const std::string& name);
 
     // counts
@@ -47,8 +47,9 @@ public:
     size_t environmentCount() const { return m_environments.size(); }
 
 private:
-    std::vector<std::unique_ptr<IForce>> m_forces;
+    std::vector<std::unique_ptr<forces::IForce>> m_forces;
     std::vector<std::unique_ptr<environment::IEnvironment>> m_environments;
+
     PhysicsContext m_context;
 };
 

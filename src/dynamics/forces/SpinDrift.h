@@ -168,6 +168,7 @@ public:
 
 private:
     std::string m_name = "Spin Drift Influence";
+
     std::unique_ptr<Lift> m_lift;
     std::unique_ptr<Magnus> m_magnus;
 };
