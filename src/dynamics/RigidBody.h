@@ -49,39 +49,49 @@ private:
 
 };
 
-// Projectile overload of RigidBody
+namespace projectile {
 
-struct ProjectileSpecs {
-    // basic parameters
-    float mass;  // kg
-
-    // dimensional parameters
-    std::optional<float> area;              // m^2 (cross-sectional area)
-    std::optional<float> diameter;          // m (caliber)
-
-    // aerodynamic coefficients
-    std::optional<forces::drag::DragCurveModel> dragModel;          // C_d
-
-    float overtuningCoefficient = constants::DEFAULT_C_M_ALPHA;     // C_M_alpha
-    float liftCoefficient = constants::DEFAULT_C_L_ALPHA;           // C_L_alpha
-    float MagnusCoefficient = constants::DEFAULT_C_MAG_F;           // C_mag_f
-
-    // rotation-dependent parameters
-    struct Rifling {
-        enum class Direction {
-            RIGHT,  // clockwise
-            LEFT    // counterclockwise
-        };
-
-        Direction direction;    // rifling direction
-        float twistRate;        // n (calibers per turn)
+// muzzle riffling specifications
+struct RiflingSpecs {
+    enum class Direction {
+        RIGHT,      // clockwise
+        LEFT        // counterclockwise
     };
 
-    std::optional<Rifling> rifling;         // muzzle twist parameters
-    std::optional<float> spinRate;          // initial spin rate (rad/s)
-    std::optional<float> momentOfInertiaX;  // kg * m^2
+    Direction direction;    // rifling direction
+    float twistRate;        // n (calibers per turn)
 };
 
+// spin-related specifications
+struct SpinSpecs {
+    // dimensional specifications
+    std::optional<float> momentOfInertia;      // I_x (kg * m^2)
+
+    // aerodynamic coefficients
+    float overtuningCoefficient = constants::DEFAULT_C_M_ALPHA;     // C_M_alpha
+    float liftCoefficient = constants::DEFAULT_C_L_ALPHA;           // C_L_alpha
+    float magnusCoefficient = constants::DEFAULT_C_MAG_F;           // C_mag_f
+
+    std::optional<RiflingSpecs> riflingSpecs;
+    std::optional<float> spinRate;              // initial spin rate (rad/s)
+};
+
+struct ProjectileSpecs {
+    // basic specifications
+    float mass;                 // kg
+
+    // dimensional specifications
+    std::optional<float> area;          // m^2 (cross-sectional area)
+    std::optional<float> diameter;      // m (caliber)
+
+    // aerodynamic coefficients
+    std::optional<forces::drag::DragCurveModel> dragModel;      // C_d
+
+    // spin-related specifications
+    std::optional<SpinSpecs> spinSpecs;
+};
+
+// projectile overload of RigidBody
 class ProjectileRigidBody : public RigidBody {
 public:
     ProjectileRigidBody() : RigidBody(), m_specs{1.0f} {}
@@ -114,6 +124,8 @@ private:
     static float calculateSpinRate(float velocity, float twistRate, float diameter);
 
 };
+
+} // namespace projectile
 
 } // namespace dynamics
 } // namespace BulletPhysic

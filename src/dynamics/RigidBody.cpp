@@ -54,6 +54,7 @@ void RigidBody::setState(const math::Vec3& pos, const math::Vec3& vel)
 }
 
 // ProjectileRigidBody
+namespace projectile {
 
 ProjectileRigidBody::ProjectileRigidBody(const ProjectileSpecs& specs) : RigidBody(), m_specs(specs)
 {
@@ -64,9 +65,14 @@ ProjectileRigidBody::ProjectileRigidBody(const ProjectileSpecs& specs) : RigidBo
         m_specs.area = calculateArea(m_specs.diameter.value());
     }
 
-    if (!m_specs.momentOfInertiaX.has_value() && m_specs.diameter.has_value())
+    if (m_specs.spinSpecs)
     {
-        m_specs.momentOfInertiaX = calculateMomentOfInertiaX(specs.mass, m_specs.diameter.value());
+        auto& spinSpecs = *m_specs.spinSpecs;
+
+        if (!spinSpecs.momentOfInertia && m_specs.diameter)
+        {
+            spinSpecs.momentOfInertia = calculateMomentOfInertiaX(m_specs.mass, *m_specs.diameter);
+        }
     }
 }
 
@@ -93,17 +99,23 @@ float ProjectileRigidBody::calculateSpinRate(float velocity, float twistRate, fl
     return 2.0f * math::constants::PI * velocity / (twistRate * diameter);
 }
 
+// auto-calculate spin rate on first velocity set if not already set
 void ProjectileRigidBody::setInitialSpinRate(float velocity)
 {
-    // auto-calculate spin rate on first velocity set if not already set
-    if (!m_specs.spinRate.has_value() &&
-        m_specs.rifling.has_value() &&
-        m_specs.diameter.has_value() &&
-        velocity > 1e-3f)
+    if (!m_specs.spinSpecs)
     {
-        m_specs.spinRate = calculateSpinRate(velocity, m_specs.rifling->twistRate, m_specs.diameter.value());
+        return;
+    }
+
+    auto& spinSpecs = *m_specs.spinSpecs;
+
+    if (!spinSpecs.spinRate && spinSpecs.riflingSpecs && m_specs.diameter)
+    {
+        spinSpecs.spinRate = calculateSpinRate(velocity, spinSpecs.riflingSpecs->twistRate, *m_specs.diameter);
     }
 }
+
+} // namespace projectile
 
 } // namespace dynamics
 } // namespace BulletPhysic

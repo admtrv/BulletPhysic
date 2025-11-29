@@ -41,7 +41,7 @@ public:
         float cd = constants::DEFAULT_CD;
         float area = constants::DEFAULT_AREA;
 
-        if (auto* projectile = dynamic_cast<const ProjectileRigidBody*>(&rb))
+        if (auto* projectile = dynamic_cast<const projectile::ProjectileRigidBody*>(&rb))
         {
             if (projectile->getSpecs().dragModel.has_value())
             {
