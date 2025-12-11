@@ -25,9 +25,9 @@ public:
             , m_groundY(groundY)
     {}
 
-    void update(PhysicsContext& context, const RigidBody& rb) override
+    void update(IPhysicsBody& body, PhysicsContext& context) override
     {
-        float altitude = std::max(0.0f, std::min(rb.position().y - m_groundY, constants::TROPOSPHERE_MAX));
+        float altitude = std::max(0.0f, std::min(body.getPosition().y - m_groundY, constants::TROPOSPHERE_MAX));
 
         // linear temperature decrease: T = T0 - L * h
         float temperature = m_baseTemperature - constants::LAPSE_RATE * altitude;

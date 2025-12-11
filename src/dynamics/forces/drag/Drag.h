@@ -5,7 +5,7 @@
 #pragma once
 
 #include "dynamics/forces/Force.h"
-#include "dynamics/RigidBody.h"
+#include "dynamics/PhysicsBody.h"
 #include "Constants.h"
 #include "DragModel.h"
 
@@ -20,9 +20,9 @@ namespace drag {
 class Drag : public IForce {
 public:
 
-    void apply(RigidBody& rb, PhysicsContext& context, float /*dt*/) override
+    void apply(IPhysicsBody& body, PhysicsContext& context, float /*dt*/) override
     {
-        math::Vec3 velocity = rb.velocity();
+        math::Vec3 velocity = body.getVelocity();
 
         // apply wind if available
         if (context.wind.has_value())
@@ -41,23 +41,26 @@ public:
         float cd = constants::DEFAULT_CD;
         float area = constants::DEFAULT_AREA;
 
-        if (auto* projectile = dynamic_cast<const projectile::ProjectileRigidBody*>(&rb))
+        // try to use projectile specs if available
+        auto* projectile = dynamic_cast<projectile::IProjectileBody*>(&body);
+        if (projectile)
         {
-            if (projectile->getSpecs().dragModel.has_value())
+            const auto& specs = projectile->getProjectileSpecs();
+            if (specs.dragModel.has_value())
             {
-                cd = StandardDragModel(projectile->getSpecs().dragModel.value()).getCd(mach);
+                cd = StandardDragModel(specs.dragModel.value()).getCd(mach);
             }
 
-            if (projectile->getSpecs().area.has_value())
+            if (specs.area.has_value())
             {
-                area = projectile->getSpecs().area.value();
+                area = specs.area.value();
             }
         }
 
         // F_d = -0.5 * rho * S * Cd * v * |v|
         math::Vec3 force = -0.5f * rho * area * cd * velocity * velocityMagnitude;
 
-        rb.addForce(force);
+        body.addForce(force);
         m_force = force;
     }
 

@@ -1,8 +1,8 @@
 /*
- * RigidBody.cpp
+ * PhysicsBody.cpp
  */
 
-#include "RigidBody.h"
+#include "PhysicsBody.h"
 
 namespace BulletPhysic {
 namespace dynamics {
@@ -37,23 +37,18 @@ void RigidBody::setVelocityFromAngles(float speed, float elevationDeg, float azi
     m_velocity = {ce * sa * speed, se * speed, ce * ca * speed};
 }
 
-void RigidBody::addForce(const math::Vec3& f)
-{
-    m_forces += f;
-}
-
 void RigidBody::clearForces()
 {
     m_forces = math::Vec3{};
 }
 
-void RigidBody::setState(const math::Vec3& pos, const math::Vec3& vel)
+std::unique_ptr<IPhysicsBody> RigidBody::clone() const
 {
-    m_position = pos;
-    m_velocity = vel;
+    return std::make_unique<RigidBody>(*this);
 }
 
 // ProjectileRigidBody
+
 namespace projectile {
 
 ProjectileRigidBody::ProjectileRigidBody(const ProjectileSpecs& specs) : RigidBody(), m_specs(specs)
@@ -74,11 +69,6 @@ ProjectileRigidBody::ProjectileRigidBody(const ProjectileSpecs& specs) : RigidBo
             spinSpecs.momentOfInertia = calculateMomentOfInertiaX(m_specs.mass, *m_specs.diameter);
         }
     }
-}
-
-std::unique_ptr<RigidBody> ProjectileRigidBody::clone() const
-{
-    return std::make_unique<ProjectileRigidBody>(*this);
 }
 
 float ProjectileRigidBody::calculateArea(float diameter)
@@ -113,6 +103,11 @@ void ProjectileRigidBody::setInitialSpinRate(float velocity)
     {
         spinSpecs.spinRate = calculateSpinRate(velocity, spinSpecs.riflingSpecs->twistRate, *m_specs.diameter);
     }
+}
+
+std::unique_ptr<IPhysicsBody> ProjectileRigidBody::clone() const
+{
+    return std::make_unique<ProjectileRigidBody>(*this);
 }
 
 } // namespace projectile

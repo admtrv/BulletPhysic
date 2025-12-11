@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "dynamics/RigidBody.h"
+#include "dynamics/PhysicsBody.h"
 #include "dynamics/PhysicsContext.h"
 
 #include <string>
@@ -18,8 +18,8 @@ class IEnvironment {
 public:
     virtual ~IEnvironment() = default;
 
-    // update physics context based on rigid body state
-    virtual void update(PhysicsContext& context, const RigidBody& rb) = 0;
+    // update physics context based on physics body state
+    virtual void update(IPhysicsBody& body, PhysicsContext& context) = 0;
 
     virtual const std::string& getName() const = 0;
 };

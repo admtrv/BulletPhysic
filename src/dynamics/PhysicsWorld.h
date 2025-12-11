@@ -5,7 +5,7 @@
 #pragma once
 
 #include "PhysicsContext.h"
-#include "RigidBody.h"
+#include "PhysicsBody.h"
 #include "forces/Force.h"
 #include "environment/Environment.h"
 
@@ -35,8 +35,8 @@ public:
     // remove all
     void clear();
 
-    // apply all forces to rigid body
-    void applyForces(RigidBody& rb, float dt);
+    // apply all forces to physics body
+    void applyForces(IPhysicsBody& body, float dt);
 
     // getters
     forces::IForce* getForce(const std::string& name);

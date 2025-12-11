@@ -16,7 +16,7 @@ namespace forces {
 class Coriolis : public IForce {
 public:
 
-    void apply(RigidBody& rb, PhysicsContext& context, float /*dt*/) override
+    void apply(IPhysicsBody& body, PhysicsContext& context, float /*dt*/) override
     {
         // requires Geographic environment
         if (!context.latitude.has_value())
@@ -25,7 +25,7 @@ public:
         }
 
         double latitude = *context.latitude;
-        math::Vec3 velocity = rb.velocity();
+        math::Vec3 velocity = body.getVelocity();
 
         // Earth's angular velocity vector in ENU frame
         // omega = (0, omega*cos(lat), omega*sin(lat))
@@ -38,10 +38,10 @@ public:
         math::Vec3 coriolisAccel = -2.0f * omega.cross(velocity);
 
         // apply force: F = m * a
-        if (rb.mass() > 0.0f)
+        if (body.getMass() > 0.0f)
         {
-            math::Vec3 force = coriolisAccel * rb.mass();
-            rb.addForce(force);
+            math::Vec3 force = coriolisAccel * body.getMass();
+            body.addForce(force);
             m_force = force;
         }
     }

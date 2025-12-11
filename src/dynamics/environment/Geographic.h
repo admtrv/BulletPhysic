@@ -1,6 +1,5 @@
 /*
  * Geographic.h
- * Provides geographic context (lat/lon/alt) and calculates gravity using GM/r²
  */
 
 #pragma once
@@ -22,10 +21,10 @@ public:
         , m_groundY(groundY)
     {}
 
-    void update(PhysicsContext& context, const RigidBody& rb) override
+    void update(IPhysicsBody& body, PhysicsContext& context) override
     {
         // calculate altitude above ground level
-        float altitudeAbove = std::max(0.0f, rb.position().y - m_groundY);
+        float altitudeAbove = std::max(0.0f, body.getPosition().y - m_groundY);
 
         // store geographic information
         context.latitude = m_reference.latitude;

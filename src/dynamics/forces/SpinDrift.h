@@ -5,7 +5,7 @@
 #pragma once
 
 #include "Force.h"
-#include "dynamics/RigidBody.h"
+#include "dynamics/PhysicsBody.h"
 #include "Constants.h"
 #include "math/Vec3.h"
 
@@ -16,24 +16,33 @@ namespace BulletPhysic {
 namespace dynamics {
 namespace forces {
 
-// yaw of repose: alpha_e = 2 * Ix * p * (g x V) / (rho * S * d * V^4 * C_M_alpha)
-static math::Vec3 calculateYawOfRepose(const projectile::ProjectileRigidBody& projectile, const PhysicsContext & context, const math::Vec3& velocity)
+// helper function to check if specs have required data for spin drift calculations
+static bool hasSpinDriftData(const projectile::ProjectileSpecs& specs)
 {
-    const auto& specs = projectile.getSpecs();
+    if (!specs.diameter.has_value()) return false;
+    if (!specs.area.has_value()) return false;
 
-    if (!specs.diameter.has_value()
-        || !specs.area.has_value()
-        || !specs.spinSpecs.has_value()
-        || !specs.spinSpecs->momentOfInertia.has_value()
-        || !specs.spinSpecs->spinRate.has_value())
+    if (!specs.spinSpecs.has_value()) return false;
+    const auto& spin = *specs.spinSpecs;
+
+    if (!spin.momentOfInertia.has_value()) return false;
+    if (!spin.spinRate.has_value()) return false;
+
+    return true;
+}
+
+// yaw of repose: alpha_e = 2 * Ix * p * (g x V) / (rho * S * d * V^4 * C_M_alpha)
+static math::Vec3 calculateYawOfRepose(const projectile::ProjectileSpecs& specs, const PhysicsContext& context, const math::Vec3& velocity)
+{
+    // requers projectile spin specs
+    if (!hasSpinDriftData(specs))
     {
         return {0.0f, 0.0f, 0.0f};
     }
-
     const auto& spinSpecs = specs.spinSpecs.value();
 
+    // velocity
     float velocityMagnitude = velocity.length();
-
     if (velocityMagnitude < 1e-3f)
     {
         return {0.0f, 0.0f, 0.0f};
@@ -56,6 +65,7 @@ static math::Vec3 calculateYawOfRepose(const projectile::ProjectileRigidBody& pr
 
     math::Vec3 numerator = 2.0f * Ix * p * gCrossV;
 
+    // final
     int spinSign = spinSpecs.riflingSpecs->direction == projectile::RiflingSpecs::Direction::RIGHT ? 1 : -1;
 
     return spinSign * numerator / denominator;
@@ -63,42 +73,46 @@ static math::Vec3 calculateYawOfRepose(const projectile::ProjectileRigidBody& pr
 
 class Lift : public IForce {
 public:
-    void apply(RigidBody& rb, PhysicsContext& context, float /*dt*/) override
+    void apply(IPhysicsBody& body, PhysicsContext& context, float /*dt*/) override
     {
-        if (auto* projectile = dynamic_cast<const projectile::ProjectileRigidBody*>(&rb))
+        // requires projectile body
+        auto* projectile = dynamic_cast<projectile::IProjectileBody*>(&body);
+        if (!projectile)
         {
-            const auto& specs = projectile->getSpecs();
-            if (!specs.spinSpecs.has_value()
-                || !specs.area.has_value()
-                || !specs.diameter.has_value()
-                || !specs.spinSpecs->riflingSpecs.has_value())
-            {
-                return;
-            }
-
-            const auto& spinSpecs = specs.spinSpecs.value();
-
-            math::Vec3 velocity = rb.velocity();
-            float velocityMagnitude = velocity.length();
-            if (velocityMagnitude < 1e-3f)
-            {
-                return;
-            }
-            float velocityMagnitudePow2 = velocityMagnitude * velocityMagnitude;
-
-            float rho = context.airDensity.value_or(constants::BASE_ATMOSPHERIC_DENSITY);
-            float S = specs.area.value();
-            float C_L_alpha = spinSpecs.liftCoefficient;
-
-            // yaw of repose
-            math::Vec3 alpha_e = calculateYawOfRepose(*projectile, context, velocity);
-
-            // F_L = 1/2 * rho * S * C_L_alpha * V^2 * alpha_e
-            math::Vec3 force = 0.5f * rho * S * C_L_alpha * velocityMagnitudePow2 * alpha_e;
-
-            rb.addForce(force);
-            m_force = force;
+            return;
         }
+
+        const auto& specs = projectile->getProjectileSpecs();
+
+        // requers projectile spin specs
+        if (!hasSpinDriftData(specs))
+        {
+            return;
+        }
+        const auto& spinSpecs = specs.spinSpecs.value();
+
+        // velocity
+        math::Vec3 velocity = body.getVelocity();
+        float velocityMagnitude = velocity.length();
+        if (velocityMagnitude < 1e-3f)
+        {
+            return;
+        }
+        float velocityMagnitudePow2 = velocityMagnitude * velocityMagnitude;
+
+        // data
+        float rho = context.airDensity.value_or(constants::BASE_ATMOSPHERIC_DENSITY);
+        float S = specs.area.value();
+        float C_L_alpha = spinSpecs.liftCoefficient;
+
+        // yaw of repose
+        math::Vec3 alpha_e = calculateYawOfRepose(specs, context, velocity);
+
+        // F_l = 1/2 * rho * S * C_L_alpha * V^2 * alpha_e
+        math::Vec3 force = 0.5f * rho * S * C_L_alpha * velocityMagnitudePow2 * alpha_e;
+
+        body.addForce(force);
+        m_force = force;
     }
 
     const std::string& getName() const override { return m_name; }
@@ -111,46 +125,48 @@ private:
 
 class Magnus : public IForce {
 public:
-    void apply(RigidBody& rb, PhysicsContext& context, float /*dt*/) override
+    void apply(IPhysicsBody& body, PhysicsContext& context, float /*dt*/) override
     {
-        if (auto* projectile = dynamic_cast<const projectile::ProjectileRigidBody*>(&rb))
+        // requires projectile body
+        auto* projectile = dynamic_cast<projectile::IProjectileBody*>(&body);
+        if (!projectile)
         {
-            const auto& specs = projectile->getSpecs();
-
-            if (!specs.diameter.has_value()
-                || !specs.area.has_value()
-                || !specs.spinSpecs.has_value()
-                || !specs.spinSpecs->spinRate.has_value())
-            {
-                return;
-            }
-
-            const auto& spinSpecs = specs.spinSpecs.value();
-
-            math::Vec3 velocity = rb.velocity();
-            float velocityMagnitude = velocity.length();
-            if (velocityMagnitude < 1e-3f)
-            {
-                return;
-            }
-
-            float rho = context.airDensity.value_or(constants::BASE_ATMOSPHERIC_DENSITY);
-            float d = specs.diameter.value();
-            float S = specs.area.value();
-            float p = spinSpecs.spinRate.value();
-            float C_mag_f = spinSpecs.magnusCoefficient;
-
-            // yaw of repose
-            math::Vec3 alpha_e = calculateYawOfRepose(*projectile, context, velocity);
-
-            math::Vec3 alphaCrossV = alpha_e.cross(velocity);
-
-            // F_M = -1/2 * rho * S * d * p * C_mag_f * (alpha_e x V)
-            math::Vec3 force = -0.5f * rho * S * d * p * C_mag_f * alphaCrossV;
-
-            rb.addForce(force);
-            m_force = force;
+            return;
         }
+
+        const auto& specs = projectile->getProjectileSpecs();
+
+        // requers projectile spin specs
+        if (!hasSpinDriftData(specs))
+        {
+            return;
+        }
+        const auto& spinSpecs = specs.spinSpecs.value();
+
+        // velocity
+        math::Vec3 velocity = body.getVelocity();
+        float velocityMagnitude = velocity.length();
+        if (velocityMagnitude < 1e-3f)
+        {
+            return;
+        }
+
+        // data
+        float rho = context.airDensity.value_or(constants::BASE_ATMOSPHERIC_DENSITY);
+        float d = specs.diameter.value();
+        float S = specs.area.value();
+        float p = spinSpecs.spinRate.value();
+        float C_mag_f = spinSpecs.magnusCoefficient;
+
+        // yaw of repose
+        math::Vec3 alpha_e = calculateYawOfRepose(specs, context, velocity);
+        math::Vec3 alphaCrossV = alpha_e.cross(velocity);
+
+        // F_m = -1/2 * rho * S * d * p * C_mag_f * (alpha_e x V)
+        math::Vec3 force = -0.5f * rho * S * d * p * C_mag_f * alphaCrossV;
+
+        body.addForce(force);
+        m_force = force;
     }
 
     const std::string& getName() const override { return m_name; }

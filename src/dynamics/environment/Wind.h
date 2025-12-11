@@ -15,7 +15,7 @@ class Wind : public IEnvironment {
 public:
     explicit Wind(const math::Vec3& windVelocity = math::Vec3{0.0f, 0.0f, 0.0f}) : m_velocity(windVelocity) {}
 
-    void update(PhysicsContext& context, const RigidBody& /*rb*/) override
+    void update(IPhysicsBody& /*body*/, PhysicsContext& context) override
     {
         context.wind = m_velocity;
     }

@@ -19,14 +19,21 @@ namespace dynamics {
 namespace forces {
 namespace drag {
 
+#ifndef DRAG_DATA_DIR
+#define DRAG_DATA_DIR "assets/data/drag"
+#endif
+
+// helper macro to concatenate path
+#define DRAG_CURVE_PATH(file) (std::string(DRAG_DATA_DIR) + "/" + file)
+
 // drag curve data file paths
-inline const std::string DRAG_CURVE_G1 = "../BulletPhysic/assets/data/g1.txt";
-inline const std::string DRAG_CURVE_G2 = "../BulletPhysic/assets/data/g2.txt";
-inline const std::string DRAG_CURVE_G5 = "../BulletPhysic/assets/data/g5.txt";
-inline const std::string DRAG_CURVE_G6 = "../BulletPhysic/assets/data/g6.txt";
-inline const std::string DRAG_CURVE_G7 = "../BulletPhysic/assets/data/g7.txt";
-inline const std::string DRAG_CURVE_G8 = "../BulletPhysic/assets/data/g8.txt";
-inline const std::string DRAG_CURVE_GL = "../BulletPhysic/assets/data/gl.txt";
+inline const std::string DRAG_CURVE_G1 = DRAG_CURVE_PATH("g1.txt");
+inline const std::string DRAG_CURVE_G2 = DRAG_CURVE_PATH("g2.txt");
+inline const std::string DRAG_CURVE_G5 = DRAG_CURVE_PATH("g5.txt");
+inline const std::string DRAG_CURVE_G6 = DRAG_CURVE_PATH("g6.txt");
+inline const std::string DRAG_CURVE_G7 = DRAG_CURVE_PATH("g7.txt");
+inline const std::string DRAG_CURVE_G8 = DRAG_CURVE_PATH("g8.txt");
+inline const std::string DRAG_CURVE_GL = DRAG_CURVE_PATH("gl.txt");
 
 enum class DragCurveModel {
     G1,

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "dynamics/RigidBody.h"
+#include "dynamics/PhysicsBody.h"
 #include "dynamics/PhysicsContext.h"
 #include "math/Vec3.h"
 
@@ -19,8 +19,8 @@ class IForce {
 public:
     virtual ~IForce() = default;
 
-    // apply force to rigid body using context
-    virtual void apply(RigidBody& rb, PhysicsContext& context, float dt) = 0;
+    // apply force to physics body using context
+    virtual void apply(IPhysicsBody& body, PhysicsContext& context, float dt) = 0;
 
     // check if this force should be active
     virtual bool isActive() const { return true; }

@@ -1,9 +1,10 @@
 /*
- * RigidBody.h
+ * PhysicsBody.h
  */
 
 #pragma once
 
+#include "Constants.h"
 #include "math/Vec3.h"
 #include "math/Angles.h"
 #include "math/Constants.h"
@@ -16,39 +17,31 @@
 namespace BulletPhysic {
 namespace dynamics {
 
-class RigidBody {
+// base interface for all physics bodies
+class IPhysicsBody {
 public:
-    virtual ~RigidBody() = default;
+    virtual ~IPhysicsBody() = default;
 
-    virtual std::unique_ptr<RigidBody> clone() const { return std::make_unique<RigidBody>(*this); }
+    virtual std::unique_ptr<IPhysicsBody> clone() const = 0;
 
-    void setMass(float mass);
-    void setPosition(const math::Vec3& pos);
-    virtual void setVelocity(const math::Vec3& vel);
-    virtual void setVelocityFromAngles(float speed, float elevationDeg, float azimuthDeg);
+    // mass
+    virtual float getMass() const = 0;
 
-    void addForce(const math::Vec3& f);
-    void clearForces();
+    // position
+    virtual math::Vec3 getPosition() const = 0;
+    virtual void setPosition(const math::Vec3& pos) = 0;
 
-    float mass() const { return m_mass; }
-    const math::Vec3& position() const { return m_position; }
-    const math::Vec3& velocity() const { return m_velocity; }
-    const math::Vec3& accumulatedForces() const { return m_forces; }
+    // velocity
+    virtual math::Vec3 getVelocity() const = 0;
+    virtual void setVelocity(const math::Vec3& vel) = 0;
 
-    void setState(const math::Vec3& pos, const math::Vec3& vel);
-
-    void setGrounded(bool grounded) { m_isGrounded = grounded; }
-    bool isGrounded() const { return m_isGrounded; }
-
-private:
-    float m_mass = 1.0f;
-    math::Vec3 m_position{};
-    math::Vec3 m_velocity{};
-    math::Vec3 m_forces{};
-    bool m_isGrounded = false;
-
+    // forces
+    virtual const math::Vec3& getAccumulatedForces() const = 0;
+    virtual void addForce(const math::Vec3& force) = 0;
+    virtual void clearForces() = 0;
 };
 
+// interface for projectile bodies
 namespace projectile {
 
 // muzzle riffling specifications
@@ -91,13 +84,64 @@ struct ProjectileSpecs {
     std::optional<SpinSpecs> spinSpecs;
 };
 
-// projectile overload of RigidBody
-class ProjectileRigidBody : public RigidBody {
+// projectile interface
+class IProjectileBody : public virtual IPhysicsBody {
+public:
+    virtual ~IProjectileBody() = default;
+
+    // projectile specifications
+    virtual const ProjectileSpecs& getProjectileSpecs() const = 0;
+};
+
+} // namespace projectile
+
+// concrete implementation of rigid body
+class RigidBody : public virtual IPhysicsBody {
+public:
+    RigidBody() = default;
+    RigidBody(const RigidBody&) = default;
+    RigidBody& operator=(const RigidBody&) = default;
+    virtual ~RigidBody() = default;
+
+    std::unique_ptr<IPhysicsBody> clone() const override;
+
+    // mass
+    float getMass() const override { return m_mass; }
+    void setMass(float mass);
+
+    // position
+    math::Vec3 getPosition() const override { return m_position; }
+    void setPosition(const math::Vec3& pos) override;
+
+    // velocity
+    math::Vec3 getVelocity() const override { return m_velocity; }
+    void setVelocity(const math::Vec3& vel) override;
+    virtual void setVelocityFromAngles(float speed, float elevationDeg, float azimuthDeg);
+
+    // forces
+    const math::Vec3& getAccumulatedForces() const override { return m_forces; }
+    void addForce(const math::Vec3& f) override { m_forces += f; }
+    void clearForces() override;
+
+private:
+    float m_mass = 1.0f;
+    math::Vec3 m_position{};
+    math::Vec3 m_velocity{};
+    math::Vec3 m_forces{};
+};
+
+// concrete projectile rigid body implementation
+namespace projectile {
+
+class ProjectileRigidBody : public RigidBody, public IProjectileBody {
 public:
     ProjectileRigidBody() : RigidBody(), m_specs{1.0f} {}
     explicit ProjectileRigidBody(const ProjectileSpecs& specs);
 
-    std::unique_ptr<RigidBody> clone() const override;
+    std::unique_ptr<IPhysicsBody> clone() const override;
+
+    // projectile specifications
+    const ProjectileSpecs& getProjectileSpecs() const override { return m_specs; }
 
     // override to calculate spin rate on first velocity set
     void setVelocity(const math::Vec3& vel) override
@@ -111,9 +155,6 @@ public:
         setInitialSpinRate(speed);
     }
     void setInitialSpinRate(float velocity);
-
-    const ProjectileSpecs& getSpecs() const { return m_specs; }
-    ProjectileSpecs& getSpecs() { return m_specs; }
 
 private:
     ProjectileSpecs m_specs;

@@ -29,7 +29,7 @@ void PhysicsWorld::clear()
     m_environments.clear();
 }
 
-void PhysicsWorld::applyForces(RigidBody& rb, float dt)
+void PhysicsWorld::applyForces(IPhysicsBody& body, float dt)
 {
     m_context.reset();
 
@@ -38,7 +38,7 @@ void PhysicsWorld::applyForces(RigidBody& rb, float dt)
     {
         if (env)
         {
-            env->update(m_context, rb);
+            env->update(body, m_context);
         }
     }
 
@@ -47,7 +47,7 @@ void PhysicsWorld::applyForces(RigidBody& rb, float dt)
     {
         if (force && force->isActive())
         {
-            force->apply(rb, m_context, dt);
+            force->apply(body, m_context, dt);
         }
     }
 }

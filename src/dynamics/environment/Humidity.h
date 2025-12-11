@@ -22,7 +22,7 @@ public:
         m_relativeHumidity = std::max(0.0f, std::min(100.0f, relativeHumidity));
     }
 
-    void update(PhysicsContext& context, const RigidBody& /*rb*/) override
+    void update(IPhysicsBody& /*body*/, PhysicsContext& context) override
     {
         // store relative humidity in context
         context.airHumidity = m_relativeHumidity;
