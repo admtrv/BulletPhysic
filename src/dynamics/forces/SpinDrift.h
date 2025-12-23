@@ -12,7 +12,7 @@
 #include <cmath>
 #include <memory>
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace dynamics {
 namespace forces {
 
@@ -190,4 +190,4 @@ public:
 
 } // namespace forces
 } // namespace dynamics
-} // namespace BulletPhysic
+} // namespace BulletPhysics

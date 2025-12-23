@@ -7,7 +7,7 @@
 #include "dynamics/PhysicsBody.h"
 #include "dynamics/PhysicsWorld.h"
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace math {
 
 class IIntegrator {
@@ -32,4 +32,4 @@ public:
 };
 
 } // namespace math
-} // namespace BulletPhysic
+} // namespace BulletPhysics

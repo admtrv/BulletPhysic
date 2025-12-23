@@ -7,7 +7,7 @@
 #include "Collider.h"
 #include "BoxCollider.h"
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace collision {
 
 class BoxCollider;
@@ -36,4 +36,4 @@ private:
 };
 
 } // namespace collision
-} // namespace BulletPhysic
+} // namespace BulletPhysics

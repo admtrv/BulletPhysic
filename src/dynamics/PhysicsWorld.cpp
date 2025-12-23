@@ -4,7 +4,7 @@
 
 #include "PhysicsWorld.h"
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace dynamics {
 
 void PhysicsWorld::addForce(std::unique_ptr<forces::IForce> force)
@@ -77,4 +77,4 @@ environment::IEnvironment* PhysicsWorld::getEnvironment(const std::string& name)
 }
 
 } // namespace dynamics
-} // namespace BulletPhysic
+} // namespace BulletPhysics

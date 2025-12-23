@@ -5,7 +5,7 @@
 #include "Coordinates.h"
 #include <cmath>
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace geography {
 
 double ECEFPosition::r() const
@@ -116,4 +116,4 @@ double gravitationalAccelerationAtGeodetic(const GeographicPosition& position)
 }
 
 } // namespace geography
-} // namespace BulletPhysic
+} // namespace BulletPhysics

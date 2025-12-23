@@ -7,7 +7,7 @@
 #include "math/Vec3.h"
 #include "Constants.h"
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace geography {
 
 // Geodetic coordinates
@@ -43,4 +43,4 @@ double gravitationalAcceleration(const ECEFPosition& position);                 
 double gravitationalAccelerationAtGeodetic(const GeographicPosition& position);     // calculate gravitational acceleration at geodetic position
 
 } // namespace geography
-} // namespace BulletPhysic
+} // namespace BulletPhysics

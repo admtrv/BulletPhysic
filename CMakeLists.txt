@@ -1,7 +1,7 @@
 # CMakeLists.txt
 
 cmake_minimum_required(VERSION 3.22)
-project(BulletPhysic)
+project(BulletPhysics)
 
 set(CMAKE_CXX_STANDARD 20)
 

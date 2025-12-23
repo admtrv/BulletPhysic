@@ -7,7 +7,7 @@
 #include "Force.h"
 #include "Constants.h"
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace dynamics {
 namespace forces {
 
@@ -47,4 +47,4 @@ private:
 
 } // namespace forces
 } // namespace dynamics
-} // namespace BulletPhysic
+} // namespace BulletPhysics

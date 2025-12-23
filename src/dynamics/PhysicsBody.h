@@ -14,7 +14,7 @@
 #include <optional>
 #include <memory>
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace dynamics {
 
 // base interface for all physics bodies
@@ -169,4 +169,4 @@ private:
 } // namespace projectile
 
 } // namespace dynamics
-} // namespace BulletPhysic
+} // namespace BulletPhysics

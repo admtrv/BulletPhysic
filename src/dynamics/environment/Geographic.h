@@ -9,7 +9,7 @@
 
 #include <cmath>
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace dynamics {
 namespace environment {
 
@@ -51,4 +51,4 @@ private:
 
 } // namespace environment
 } // namespace dynamics
-} // namespace BulletPhysic
+} // namespace BulletPhysics

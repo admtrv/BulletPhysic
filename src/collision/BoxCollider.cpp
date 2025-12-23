@@ -4,7 +4,7 @@
 
 #include "BoxCollider.h"
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace collision {
 
 BoxCollider::BoxCollider(const math::Vec3& size) : m_size(size) {}
@@ -108,4 +108,4 @@ bool BoxCollider::testCollisionWithGround(const GroundCollider& ground, Collisio
 }
 
 } // namespace collision
-} // namespace BulletPhysic
+} // namespace BulletPhysics

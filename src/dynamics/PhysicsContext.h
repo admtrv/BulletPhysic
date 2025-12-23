@@ -8,7 +8,7 @@
 
 #include <optional>
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace dynamics {
 
 // shared context for physics simulation (environments provide, forces consume)
@@ -45,4 +45,4 @@ public:
 };
 
 } // namespace dynamics
-} // namespace BulletPhysic
+} // namespace BulletPhysics

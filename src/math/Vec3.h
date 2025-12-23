@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace math {
 
 struct Vec3 {
@@ -31,4 +31,4 @@ struct Vec3 {
 Vec3 operator*(float scalar, const Vec3& vec);
 
 } // namespace math
-} // namespace BulletPhysic
+} // namespace BulletPhysics

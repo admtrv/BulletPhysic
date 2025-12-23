@@ -14,7 +14,7 @@
 #include "Constants.h"
 #include "math/Algorithms.h"
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace dynamics {
 namespace forces {
 namespace drag {
@@ -102,4 +102,4 @@ private:
 } // namespace drag
 } // namespace forces
 } // namespace dynamics
-} // namespace BulletPhysic
+} // namespace BulletPhysics

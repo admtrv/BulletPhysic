@@ -9,7 +9,7 @@
 
 #include <string>
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace dynamics {
 namespace environment {
 
@@ -26,4 +26,4 @@ public:
 
 } // namespace environment
 } // namespace dynamics
-} // namespace BulletPhysic
+} // namespace BulletPhysics

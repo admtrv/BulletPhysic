@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace collision {
 
 class GroundCollider;
@@ -50,4 +50,4 @@ private:
 };
 
 } // namespace collision
-} // namespace BulletPhysic
+} // namespace BulletPhysics

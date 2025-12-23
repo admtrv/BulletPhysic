@@ -6,7 +6,7 @@
 
 #include "math/Vec3.h"
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace collision {
 
 enum class CollisionShape {
@@ -32,4 +32,4 @@ public:
 };
 
 } // namespace collision
-} // namespace BulletPhysic
+} // namespace BulletPhysics

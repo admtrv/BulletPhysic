@@ -8,7 +8,7 @@
 
 #include <numbers>
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace math {
 
 inline float deg2rad(float deg)
@@ -21,4 +21,4 @@ inline float rad2deg(float rad)
 }
 
 } // namespace math
-} // namespace BulletPhysic
+} // namespace BulletPhysics

@@ -10,7 +10,7 @@
 #include <memory>
 #include <algorithm>
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace collision {
 
 struct Manifold {
@@ -32,4 +32,4 @@ private:
 };
 
 } // namespace collision
-} // namespace BulletPhysic
+} // namespace BulletPhysics

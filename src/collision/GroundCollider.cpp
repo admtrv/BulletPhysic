@@ -4,7 +4,7 @@
 
 #include "GroundCollider.h"
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace collision {
 
 GroundCollider::GroundCollider(float groundLevel) : m_position{0.0f, groundLevel, 0.0f} {}
@@ -46,4 +46,4 @@ bool GroundCollider::testCollisionWithBox(const BoxCollider& box, CollisionInfo&
 }
 
 } // namespace collision
-} // namespace BulletPhysic
+} // namespace BulletPhysics

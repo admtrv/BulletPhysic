@@ -6,7 +6,7 @@
 
 #include "math/Vec3.h"
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace constants {
 
 // physical
@@ -45,4 +45,4 @@ static constexpr float DEFAULT_C_L_ALPHA = 0.10f;
 static constexpr float DEFAULT_C_MAG_F = 0.10f;
 
 } // namespace constants
-} // namespace BulletPhysic
+} // namespace BulletPhysics

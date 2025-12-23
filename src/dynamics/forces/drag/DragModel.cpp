@@ -5,7 +5,7 @@
 #include "DragModel.h"
 #include <iostream>
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace dynamics {
 namespace forces {
 namespace drag {
@@ -150,4 +150,4 @@ float StandardDragModel::getCd(float mach) const
 } // namespace drag
 } // namespace forces
 } // namespace dynamics
-} // namespace BulletPhysic
+} // namespace BulletPhysics

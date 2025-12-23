@@ -4,7 +4,7 @@
 
 #include "CollisionDetection.h"
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace collision {
 
 void CollisionDetection::addCollider(Collider* collider)
@@ -54,4 +54,4 @@ void CollisionDetection::detect(std::vector<Manifold>& manifolds)
 }
 
 } // namespace collision
-} // namespace BulletPhysic
+} // namespace BulletPhysics

@@ -4,7 +4,7 @@
 
 #include "PhysicsBody.h"
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace dynamics {
 
 // RigidBody
@@ -113,4 +113,4 @@ std::unique_ptr<IPhysicsBody> ProjectileRigidBody::clone() const
 } // namespace projectile
 
 } // namespace dynamics
-} // namespace BulletPhysic
+} // namespace BulletPhysics

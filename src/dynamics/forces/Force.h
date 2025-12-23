@@ -10,7 +10,7 @@
 
 #include <string>
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace dynamics {
 namespace forces {
 
@@ -36,4 +36,4 @@ protected:
 
 } // namespace forces
 } // namespace dynamics
-} // namespace BulletPhysic
+} // namespace BulletPhysics

@@ -5,7 +5,7 @@
 #include "Vec3.h"
 #include <cmath>
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace math {
 
 Vec3::Vec3() : x(0.0f), y(0.0f), z(0.0f) {}
@@ -85,4 +85,4 @@ Vec3 Vec3::cross(const Vec3& rhs) const
 }
 
 } // namespace math
-} // namespace BulletPhysic
+} // namespace BulletPhysics

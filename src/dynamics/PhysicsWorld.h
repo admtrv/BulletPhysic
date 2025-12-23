@@ -13,7 +13,7 @@
 #include <memory>
 #include <string>
 
-namespace BulletPhysic {
+namespace BulletPhysics {
 namespace dynamics {
 
 // physics world manages forces and environment
@@ -57,4 +57,4 @@ private:
 };
 
 } // namespace dynamics
-} // namespace BulletPhysic
+} // namespace BulletPhysics
